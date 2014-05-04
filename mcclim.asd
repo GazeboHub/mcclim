@@ -1,10 +1,10 @@
 ;;; -*- Mode: Lisp -*-
 
 ;;;  (c) copyright 1998,1999,2000 by Michael McDonald (mikemac@mikemac.com)
-;;;  (c) copyright 2000 by 
+;;;  (c) copyright 2000 by
 ;;;           Robert Strandh (strandh@labri.u-bordeaux.fr)
 ;;;  (c) copyright 2005 by
-;;;	      Andreas Fuchs (asf@boinkor.net)
+;;;           Andreas Fuchs (asf@boinkor.net)
 ;;;
 ;;; This library is free software; you can redistribute it and/or
 ;;; modify it under the terms of the GNU Library General Public
@@ -17,8 +17,8 @@
 ;;; Library General Public License for more details.
 ;;;
 ;;; You should have received a copy of the GNU Library General Public
-;;; License along with this library; if not, write to the 
-;;; Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+;;; License along with this library; if not, write to the
+;;; Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 ;;; Boston, MA  02111-1307  USA.
 
 
@@ -57,15 +57,15 @@
   (unless (fboundp 'ext:stream-read-char)
     (unless (ignore-errors (ext:search-list "gray-streams:"))
       (setf (ext:search-list "gray-streams:")
-	'("target:pcl/" "library:subsystems/")))
+        '("target:pcl/" "library:subsystems/")))
     (if (fboundp 'extensions:without-package-locks)
-	(extensions:without-package-locks
-	 (load "gray-streams:gray-streams-library"))
+        (extensions:without-package-locks
+         (load "gray-streams:gray-streams-library"))
       (load "gray-streams:gray-streams-library")))
   #-(or clx clim-gtkairo clim-graphic-forms)
   (require :clx)
   #+mp (when (eq mp::*initial-process* mp::*current-process*)
-	 (format t "~%~%You need to run (mp::startup-idle-and-top-level-loops) to start up the multiprocessing support.~%~%")))
+         (format t "~%~%You need to run (mp::startup-idle-and-top-level-loops) to start up the multiprocessing support.~%~%")))
 
 ;;; Make CLX asdf-loadable on Allegro 6.2
 ;;; possibly this should be further refined to funciton properly for
@@ -78,7 +78,7 @@
   (defmethod asdf:perform ((op asdf:load-op) (system requireable-system))
     (require (intern (slot-value system 'asdf::name) :keyword)))
   (defmethod asdf::traverse ((op asdf:load-op) (system requireable-system))
-    (list (cons op system)))  
+    (list (cons op system)))
   (defsystem :clx
     :class requireable-system))
 
@@ -89,16 +89,16 @@
 (defmacro clim-defsystem ((module &key depends-on) &rest components)
   `(progn
      (asdf:defsystem ,module
-	 ,@(and depends-on
-		`(:depends-on ,depends-on))
-	 :serial t
-	 :components
-	 (,@(loop for c in components
-		  for p = (merge-pathnames
-			   (parse-namestring c)
-			   (make-pathname :type "lisp"
-					  :defaults *clim-directory*))
-		  collect `(:file ,(namestring p) :pathname ,p))))))
+         ,@(and depends-on
+                `(:depends-on ,depends-on))
+         :serial t
+         :components
+         (,@(loop for c in components
+                  for p = (merge-pathnames
+                           (parse-namestring c)
+                           (make-pathname :type "lisp"
+                                          :defaults *clim-directory*))
+                  collect `(:file ,(namestring p) :pathname ,p))))))
 
 (defsystem :clim-lisp
     :components
@@ -107,19 +107,21 @@
    (:module "Lisp-Dep"
             :depends-on ("patch")
             :components
-            ((:file   #+cmu       "fix-cmu"
-		      #+scl       "fix-scl"
-                      #+excl      "fix-acl"
-                      #+sbcl      "fix-sbcl"
-                      #+openmcl   "fix-openmcl"
-                      #+lispworks "fix-lispworks"
-                      #+clisp     "fix-clisp")))
+            (
+             #+(or cmu scl excl sbcl openmcl lispworks clisp)
+               (:file   #+cmu       "fix-cmu"
+                        #+scl       "fix-scl"
+                        #+excl      "fix-acl"
+                        #+sbcl      "fix-sbcl"
+                        #+openmcl   "fix-openmcl"
+                        #+lispworks "fix-lispworks"
+                        #+clisp     "fix-clisp")))
    (:file "package" :depends-on ("Lisp-Dep" "patch"))))
 
 (defsystem :clim-basic
     :depends-on (:clim-lisp :spatial-trees (:version "flexichain" "1.5.1"))
     :components ((:file "decls")
-		 (:file "protocol-classes" :depends-on ("decls"))
+                 (:file "protocol-classes" :depends-on ("decls"))
                  (:module "Lisp-Dep"
                           :depends-on ("decls")
                           :components
@@ -167,7 +169,7 @@
                                                                    "transforms" "sheets" "stream-output"
                                                                    "ports" "recording" "regions"
                                                                    "events"))
-		 (:file "bezier" :depends-on ("recording"))))
+                 (:file "bezier" :depends-on ("recording"))))
 
 (defsystem :goatee-core
     :depends-on (:clim-basic)
@@ -229,7 +231,7 @@
                (:file "dialog-views" :depends-on ("presentations" "incremental-redisplay"
                                                                   "bordered-output" "presentation-defs"))
                (:file "presentation-defs" :depends-on ("input-editing" "presentations"))
-               (:file "gadgets" :depends-on ("commands" "pointer-tracking" "input-editing" 
+               (:file "gadgets" :depends-on ("commands" "pointer-tracking" "input-editing"
                                                         "frames" "incremental-redisplay" "panes"))
                (:file "describe" :depends-on ("presentations" "presentation-defs" "table-formatting"))
                (:file "commands" :depends-on ("input-editing" "presentations"
@@ -270,11 +272,11 @@
   :components
   ((:module "cl-automaton"
             :pathname #.(make-pathname :directory '(:relative "Drei" "cl-automaton"))
-	    :components ((:file "automaton-package")
-			 (:file "eqv-hash" :depends-on ("automaton-package"))
-			 (:file "state-and-transition" :depends-on ("eqv-hash"))
-			 (:file "automaton" :depends-on ("state-and-transition" "eqv-hash"))
-			 (:file "regexp" :depends-on ("automaton"))))
+            :components ((:file "automaton-package")
+                         (:file "eqv-hash" :depends-on ("automaton-package"))
+                         (:file "state-and-transition" :depends-on ("eqv-hash"))
+                         (:file "automaton" :depends-on ("state-and-transition" "eqv-hash"))
+                         (:file "regexp" :depends-on ("automaton"))))
    (:module "Persistent"
             :pathname #.(make-pathname :directory '(:relative "Drei" "Persistent"))
             :components ((:file "binseq-package")
@@ -330,7 +332,7 @@
   :components
   ((:module "Tests"
             :pathname #.(make-pathname :directory '(:relative "Drei" "Tests"))
-            :components 
+            :components
             ((:module
               "cl-automaton"
               :depends-on ("testing")
@@ -362,8 +364,8 @@
    (:file "input-editing-drei")
    (:file "text-editor-gadget")
    (:file "Extensions/tab-layout"
-	  :pathname #.(make-pathname :directory '(:relative "Extensions")
-				     :name "tab-layout"))))
+          :pathname #.(make-pathname :directory '(:relative "Extensions")
+                                     :name "tab-layout"))))
 
 (defsystem :clim-clx
     :depends-on (:clim #+(or sbcl openmcl ecl allegro) :clx)
@@ -463,51 +465,51 @@
     :depends-on (:clim)
     :components
     ((:module "Backends/Null"
-	      :pathname #.(make-pathname :directory '(:relative "Backends" "Null"))
-	      :components
-	      ((:file "package")
-	       (:file "port" :depends-on ("package"))
-	       (:file "medium" :depends-on ("port" "package"))
-	       (:file "graft" :depends-on ("port" "package"))
-	       (:file "frame-manager" :depends-on ("medium" "port" "package"))))))
+              :pathname #.(make-pathname :directory '(:relative "Backends" "Null"))
+              :components
+              ((:file "package")
+               (:file "port" :depends-on ("package"))
+               (:file "medium" :depends-on ("port" "package"))
+               (:file "graft" :depends-on ("port" "package"))
+               (:file "frame-manager" :depends-on ("medium" "port" "package"))))))
 
 (defsystem :clim-gtkairo
     :depends-on (:clim :cffi)
     :components
     ((:module "Backends/gtkairo"
-	      :pathname #.(make-pathname :directory '(:relative "Backends" "gtkairo"))
-	      :serial t			;asf wird's ja richten
-	      :components
-	      ((:file "clim-fix")
-	       (:file "package")
-	       (:file "gtk-ffi")
-	       (:file "cairo-ffi")
-	       (:file "ffi")
-	       (:file "graft")
-	       (:file "port")
-	       (:file "event")
-	       (:file "keys")
-	       (:file "medium")
-	       (:file "pango")
-	       (:file "cairo")
-	       (:file "gdk")
-	       (:file "pixmap")
-	       (:file "frame-manager")
-	       (:file "gadgets")))))
+              :pathname #.(make-pathname :directory '(:relative "Backends" "gtkairo"))
+              :serial t			;asf wird's ja richten
+              :components
+              ((:file "clim-fix")
+               (:file "package")
+               (:file "gtk-ffi")
+               (:file "cairo-ffi")
+               (:file "ffi")
+               (:file "graft")
+               (:file "port")
+               (:file "event")
+               (:file "keys")
+               (:file "medium")
+               (:file "pango")
+               (:file "cairo")
+               (:file "gdk")
+               (:file "pixmap")
+               (:file "frame-manager")
+               (:file "gadgets")))))
 
 (defsystem :clim-graphic-forms
     :depends-on (:clim :graphic-forms-uitoolkit)
     :components
     ((:module "Backends/Graphic-Forms"
-	      :pathname #.(make-pathname :directory '(:relative "Backends" "Graphic-Forms"))
-	      :components
-	      ((:file "package")
+              :pathname #.(make-pathname :directory '(:relative "Backends" "Graphic-Forms"))
+              :components
+              ((:file "package")
          (:file "utils" :depends-on ("package"))
-	       (:file "graft" :depends-on ("package"))
-	       (:file "port" :depends-on ("utils" "graft"))
-	       (:file "medium" :depends-on ("port"))
+               (:file "graft" :depends-on ("package"))
+               (:file "port" :depends-on ("utils" "graft"))
+               (:file "medium" :depends-on ("port"))
          (:file "pixmap" :depends-on ("medium"))
-	       (:file "frame-manager" :depends-on ("medium"))
+               (:file "frame-manager" :depends-on ("medium"))
          (:file "gadgets" :depends-on ("port"))))))
 
 ;;; TODO/asf: I don't have the required libs to get :clim-opengl to load. tough.
@@ -527,21 +529,21 @@
                  ;; If we're on an implementation that ships CLX, use
                  ;; it. Same if the user has loaded CLX already.
                  #+(and (or sbcl scl openmcl ecl clx allegro)
-			(not (or clim-gtkairo clim-graphic-forms clim-beagle)))
-		 :clim-clx
+                        (not (or clim-gtkairo clim-graphic-forms clim-beagle)))
+                 :clim-clx
                  #+clim-graphic-forms             :clim-graphic-forms
                  #+clim-gl                        :clim-opengl
                  ;; OpenMCL and MCL support the beagle backend (native
                  ;; OS X look&feel on OS X).
                  #+clim-beagle :clim-beagle
 
-		 #+clim-gtkairo :clim-gtkairo
+                 #+clim-gtkairo :clim-gtkairo
 
-		 ;; null backend
-		 :clim-null
+                 ;; null backend
+                 :clim-null
                  )
     :components (#-(or clim-gtkairo clim-graphic-forms clim-beagle)
-		 (:file "Looks/pixie"
+                 (:file "Looks/pixie"
                         :pathname #.(make-pathname :directory '(:relative "Looks") :name "pixie" :type "lisp"))))
 
 ;;; The actual McCLIM system that people should to use in their ASDF
