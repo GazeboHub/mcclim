@@ -220,10 +220,12 @@
          `(#+clisp                 ,@'(:gray)
            #+cmu                   ,@'(:ext)
            #+scl                   ,@'(:ext)
-	   #+(or mcl openmcl)      ,@'(:ccl)
+           #+(or mcl openmcl)      ,@'(:ccl)
            #+allegro               ,@'(:common-lisp :excl :stream)
            #+harlequin-common-lisp ,@'(:stream)
-           #+sbcl                  ,@'(:sb-gray))) )
+           #+sbcl                  ,@'(:sb-gray)
+           #+ecl                   ,@'(:gray)
+           )) )
     ;;
     (labels ((seek-symbol (name packages)
                ;; seek the a symbol named 'name' in `packages'
@@ -292,60 +294,60 @@
   (:use)
   ;;
   (:import-from :clim-lisp
-   #:and 
-   #:boolean 
-   #:character 
-   #:close 
-   #:complex 
-   #:float 
-   #:fundamental-binary-input-stream 
-   #:fundamental-binary-output-stream 
-   #:fundamental-binary-stream 
-   #:fundamental-character-input-stream 
-   #:fundamental-character-output-stream 
-   #:fundamental-character-stream 
-   #:fundamental-input-stream 
-   #:fundamental-output-stream 
-   #:fundamental-stream 
-   #:input-stream-p 
-   #:integer 
-   #:interactive-stream-p 
-   #:keyword 
+   #:and
+   #:boolean
+   #:character
+   #:close
+   #:complex
+   #:float
+   #:fundamental-binary-input-stream
+   #:fundamental-binary-output-stream
+   #:fundamental-binary-stream
+   #:fundamental-character-input-stream
+   #:fundamental-character-output-stream
+   #:fundamental-character-stream
+   #:fundamental-input-stream
+   #:fundamental-output-stream
+   #:fundamental-stream
+   #:input-stream-p
+   #:integer
+   #:interactive-stream-p
+   #:keyword
    #:member
    #:nil
-   #:null 
-   #:number 
-   #:open-stream-p 
-   #:or 
-   #:output-stream-p 
-   #:pathname 
-   #:ratio 
-   #:rational 
-   #:real 
-   #:sequence 
-   #:stream-advance-to-column 
+   #:null
+   #:number
+   #:open-stream-p
+   #:or
+   #:output-stream-p
+   #:pathname
+   #:ratio
+   #:rational
+   #:real
+   #:sequence
+   #:stream-advance-to-column
    #:stream-clear-input
    #:stream-clear-output
-   #:stream-element-type 
-   #:stream-finish-output 
-   #:stream-force-output 
-   #:stream-fresh-line 
-   #:stream-line-column 
-   #:stream-listen 
-   #:stream-peek-char 
-   #:stream-read-byte 
-   #:stream-read-char 
-   #:stream-read-char-no-hang 
-   #:stream-read-line 
-   #:stream-start-line-p 
-   #:stream-terpri 
-   #:stream-unread-char 
-   #:stream-write-byte 
-   #:stream-write-char 
-   #:stream-write-string 
-   #:streamp 
-   #:string 
-   #:symbol 
+   #:stream-element-type
+   #:stream-finish-output
+   #:stream-force-output
+   #:stream-fresh-line
+   #:stream-line-column
+   #:stream-listen
+   #:stream-peek-char
+   #:stream-read-byte
+   #:stream-read-char
+   #:stream-read-char-no-hang
+   #:stream-read-line
+   #:stream-start-line-p
+   #:stream-terpri
+   #:stream-unread-char
+   #:stream-write-byte
+   #:stream-write-char
+   #:stream-write-string
+   #:streamp
+   #:string
+   #:symbol
    #:t)
   ;;
   (:export
@@ -1589,7 +1591,7 @@
   ;; this is mentioned in silica.tex. spelling error?
 
   ;;;; absolutly no mention of the following in the spec:
-  
+
   ;; add-watcher
   ;; bordering
   ;; border-pane
@@ -1636,7 +1638,7 @@
   (:export
    ;; I forget where the wheel symbols come from. They aren't in the
    ;; Franz guide. Are they from Lispworks, or did McCLIM invent them?
-   #:+pointer-wheel-up+                 
+   #:+pointer-wheel-up+
    #:+pointer-wheel-down+
    #:+pointer-wheel-left+
    #:+pointer-wheel-right+
@@ -1668,7 +1670,7 @@
    #:toggle-button-view                 ;class
    #:+toggle-button-view+               ;constant
    #:sheet-pointer-cursor)
-  
+
    ;;; x11 color names - some are not in the spec - mikemac
   (:export
    #:+snow+ #:+ghost-white+ #:+ghostwhite+ #:+white-smoke+
@@ -1946,7 +1948,7 @@
    #:list-pane-items
    #:output-record-baseline
    #:merging-dead-keys
-   
+
    #:draw-output-border-over
    #:draw-output-border-under
    #:make-bordered-output-record
@@ -1957,7 +1959,7 @@
    #:highlight-output-record-tree
    #:cut-and-paste-mixin
    #:mouse-wheel-scroll-mixin
-   
+
    ;; Font listing extension:
    #:font-family
    #:font-face
@@ -2148,23 +2150,23 @@
 (defpackage :clim-tab-layout
   (:use :clim :clim-lisp)
   (:export #:tab-layout
-	   #:tab-layout-pane
-	   #:tab-layout-pages
-	   #:tab-page
-	   #:tab-page-tab-layout
-	   #:tab-page-title
-	   #:tab-page-pane
-	   #:tab-page-presentation-type
-	   #:tab-page-drawing-options
-	   #:add-page
-	   #:remove-page
-	   #:tab-layout-enabled-page
-	   #:sheet-to-page
-	   #:find-tab-page-named
-	   #:switch-to-page
-	   #:remove-page-named
-	   #:with-tab-layout
+           #:tab-layout-pane
+           #:tab-layout-pages
+           #:tab-page
+           #:tab-page-tab-layout
+           #:tab-page-title
+           #:tab-page-pane
+           #:tab-page-presentation-type
+           #:tab-page-drawing-options
+           #:add-page
+           #:remove-page
+           #:tab-layout-enabled-page
+           #:sheet-to-page
+           #:find-tab-page-named
+           #:switch-to-page
+           #:remove-page-named
+           #:with-tab-layout
            #:com-switch-to-tab-page
-	   #:com-remove-tab-page
-	   #:internal-child-p
-	   #:note-tab-page-changed))
+           #:com-remove-tab-page
+           #:internal-child-p
+           #:note-tab-page-changed))
