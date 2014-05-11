@@ -4,28 +4,6 @@
 
 
 
-(in-package #:clim-lisp)
-
-;; #+ECL
-;; (let ((p (find-package '#:gray))
-;;       (clp (find-package '#:cl)))
-
-;;   ;; shadow potential name conflicts
-;;   ;; for symbols exported from #:GRAY
-;;   (do-external-symbols (s p)
-;;     (multiple-value-bind (s% s%p)
-;;         (find-symbol (symbol-name s) p)
-;;       (declare (ignore %s))
-;;       (when s%p
-;;         (shadowing-import s))))
-
-;;   (use-package p '#:clim-lisp)
-;;   ) ;; LET
-
-
-
-
-
 (defpackage :clim-mop
   (:use :clos))
 
