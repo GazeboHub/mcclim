@@ -101,6 +101,7 @@
                   collect `(:file ,(namestring p) :pathname ,p))))))
 
 (defsystem :clim-lisp
+    :depends-on ("trivial-gray-streams")
     :components
   (;; First possible patches
    (:file "patch")
