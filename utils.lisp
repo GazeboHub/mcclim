@@ -13,20 +13,35 @@
 ;;; Library General Public License for more details.
 ;;;
 ;;; You should have received a copy of the GNU Library General Public
-;;; License along with this library; if not, write to the 
-;;; Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+;;; License along with this library; if not, write to the
+;;; Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 ;;; Boston, MA  02111-1307  USA.
 
 (in-package :clim-internals)
 
 (defun get-environment-variable (string)
-  #+excl (sys:getenv string)
-  #+(or cmu scl) (cdr (assoc string ext:*environment-list* :test #'string=))
-  #+clisp (ext:getenv (string string))
-  #+sbcl (sb-ext::posix-getenv string)
-  #+openmcl (ccl::getenv string)
-  #+lispworks (lw:environment-variable string)
-  #-(or excl cmu scl clisp sbcl openmcl lispworks)
+  #+asdf3 (uiop/os:getenv string)
+
+  #+(and (not asdf3) excl)
+  (sys:getenv string)
+
+  #+(and (not asdf3) (or cmu scl))
+  (cdr (assoc string ext:*environment-list* :test #'string=))
+
+  #+(and (not asdf3) clisp)
+  (ext:getenv (string string))
+
+  #+(and (not asdf3) sbcl)
+  (sb-ext::posix-getenv string)
+
+  #+(and (not asdf3) openmcl)
+  (ccl::getenv string)
+
+  #+(and (not asdf3) lispworks)
+  (lw:environment-variable string)
+
+  #+(and (not asdf3)
+         (not (or excl cmu scl clisp sbcl openmcl lispworks)))
   (error "GET-ENVIRONMENT-VARIABLE not implemented"))
 
 ;;; It would be nice to define this macro in terms of letf, but that
@@ -59,7 +74,7 @@
 (eval-when (:compile-toplevel :execute)
   (when (find-symbol "PACKAGE-LOCK" :ext)
     (pushnew 'clim-internals::package-locks *features*)))
- 
+
 #+(and cmu clim-internals::package-locks)
 (eval-when (:load-toplevel)
   (unless (find-symbol "PACKAGE-LOCK" :ext)
@@ -86,7 +101,7 @@
 (defmacro with-system-redefinition-allowed (&body body)
   #+clim-internals::package-locks
   `(progn
-    (eval-when (:compile-toplevel :load-toplevel :execute)      
+    (eval-when (:compile-toplevel :load-toplevel :execute)
       (sb-ext:unlock-package :common-lisp))
     ,@body
     (eval-when (:compile-toplevel :load-toplevel :execute)
@@ -163,10 +178,10 @@ evaluated."
 (defmacro letf* ((&rest forms) &body body)
   (if (null forms)
       `(locally
-	 ,@body)
+         ,@body)
       `(letf (,(car forms))
-	 (letf* (,(cdr forms))
-	   ,@body))))
+         (letf* (,(cdr forms))
+           ,@body))))
 
 (defun map-repeated-sequence (result-type n function sequence)
   "Like CL:MAP, but applies \\arg{function} to \\arg{n} consecutive
@@ -225,51 +240,51 @@ symbol).  At each iteration the variables in VARS are bound to the
 initial elements of the sequence.  The iteration is then \"stepped\"
 by the number of variables in VARS."
   (flet ((list-accessor (n)
-	   (case n
-	     (0 'car)
-	     (1 'cadr)
-	     (2 'caddr)
-	     (3 'cadddr)
-	     (t `(lambda (list) (nth ,n list)))))
-	 (list-stepper (n)
-	   (case n
-	     (1 'cdr)
-	     (2 'cddr)
-	     (3 'cdddr)
-	     (4 'cddddr)
-	     (t `(lambda (list) (nthcdr ,n list))))))
+           (case n
+             (0 'car)
+             (1 'cadr)
+             (2 'caddr)
+             (3 'cadddr)
+             (t `(lambda (list) (nth ,n list)))))
+         (list-stepper (n)
+           (case n
+             (1 'cdr)
+             (2 'cddr)
+             (3 'cdddr)
+             (4 'cddddr)
+             (t `(lambda (list) (nthcdr ,n list))))))
     (when (not (listp vars))
       (setq vars (list vars)))
     (let* ((body-fun (gensym "BODY-FUN"))
-	   (var-length (length vars))
-	   (seq-var (gensym "SEQ-VAR"))
-	   (tail-var (gensym "TAIL-VAR"))
-	   (i (gensym "I"))
-	   (list-args (loop for j from 0 below var-length
-			    collect `(,(list-accessor j) ,tail-var)))
-	   (vector-args (loop for j from 0 below var-length
-			      collect `(aref ,seq-var (+ ,i ,j)))))
+           (var-length (length vars))
+           (seq-var (gensym "SEQ-VAR"))
+           (tail-var (gensym "TAIL-VAR"))
+           (i (gensym "I"))
+           (list-args (loop for j from 0 below var-length
+                            collect `(,(list-accessor j) ,tail-var)))
+           (vector-args (loop for j from 0 below var-length
+                              collect `(aref ,seq-var (+ ,i ,j)))))
       `(block nil
-	 (flet ((,body-fun ,vars
-		  (tagbody
-		     ,@body)))
-	   (let ((,seq-var ,sequence))
-	     (etypecase ,seq-var
-	       (list
-		(loop for ,tail-var on ,seq-var by #',(list-stepper var-length)
-		      do (,body-fun ,@list-args)))
-	       (vector
-		(loop for ,i of-type fixnum from 0 below (length ,seq-var) by ,var-length
-		      do (,body-fun ,@vector-args))))))
-	 ,@(when result-form
-	     `((let ,vars		;Bind variables to nil
-		 (declare (ignorable ,vars))
-		 ,result-form)))))))
+         (flet ((,body-fun ,vars
+                  (tagbody
+                     ,@body)))
+           (let ((,seq-var ,sequence))
+             (etypecase ,seq-var
+               (list
+                (loop for ,tail-var on ,seq-var by #',(list-stepper var-length)
+                      do (,body-fun ,@list-args)))
+               (vector
+                (loop for ,i of-type fixnum from 0 below (length ,seq-var) by ,var-length
+                      do (,body-fun ,@vector-args))))))
+         ,@(when result-form
+             `((let ,vars		;Bind variables to nil
+                 (declare (ignorable ,vars))
+                 ,result-form)))))))
 
 (defun clamp (value min max)
   "Clamps the value 'value' into the range [min,max]."
   (max min (min max value)))
-  
+
 ;;;;
 ;;;; meta functions
 ;;;;
@@ -308,10 +323,10 @@ by the number of variables in VARS."
 ;;; comes before commands.lisp.
 
 (defmacro do-command-table-inheritance ((command-table-var command-table)
-					&body body)
+                                        &body body)
   `(apply-with-command-table-inheritance
     #'(lambda (,command-table-var)
-	,@body)
+        ,@body)
     (find-command-table ,command-table)))
 
 ;;;
@@ -339,12 +354,12 @@ by the number of variables in VARS."
  declarations at its top. Returns as values a list of the declarations and the
  rest of the body."
   (loop for bod on body
-	for (form) = bod
-	if (and (consp form) (eq (car form) 'declare))
-	  collect form into decls
-	else
-	  return (values decls bod)
-	finally	(return (values decls nil)))) ;It's all (declare ...)
+        for (form) = bod
+        if (and (consp form) (eq (car form) 'declare))
+          collect form into decls
+        else
+          return (values decls bod)
+        finally	(return (values decls nil)))) ;It's all (declare ...)
 
 (defun decode-specializer (specializer-name)
   (if (atom specializer-name)
@@ -402,22 +417,22 @@ by the number of variables in VARS."
   (let ((clean-tail arg-list))
     ;; First, determine a tail in which there are no keywords to be removed.
     (loop for arg-tail on arg-list by #'cddr
-	  for (key) = arg-tail
-	  do (when (member key keywords :test #'eq)
-	       (setq clean-tail (cddr arg-tail))))
+          for (key) = arg-tail
+          do (when (member key keywords :test #'eq)
+               (setq clean-tail (cddr arg-tail))))
     ;; Cons up the new arg list until we hit the clean-tail, then nconc that on
     ;; the end.
     (loop for arg-tail on arg-list by #'cddr
-	  for (key value) = arg-tail
-	  if (eq arg-tail clean-tail)
-	    nconc clean-tail
-	    and do (loop-finish)
-	  else if (not (member key keywords :test #'eq))
-	    nconc (list key value)
-	  end)))
+          for (key value) = arg-tail
+          if (eq arg-tail clean-tail)
+            nconc clean-tail
+            and do (loop-finish)
+          else if (not (member key keywords :test #'eq))
+            nconc (list key value)
+          end)))
 
 (defmacro with-keywords-removed ((var keywords &optional (new-var var))
-				 &body body)
+                                 &body body)
   "binds NEW-VAR (defaults to VAR) to VAR with the keyword arguments specified
 in KEYWORDS removed."
   `(let ((,new-var (remove-keywords ,var ',keywords)))
@@ -454,7 +469,7 @@ in KEYWORDS removed."
 
 (defun declare-ignorable-form* (&rest variables)
   (declare-ignorable-form variables))
-  
+
 (defun gen-invoke-trampoline (fun to-bind to-pass body)
   "Macro helper function, generates the LABELS / INVOKE-WITH-... ideom."
   (let ((cont (gensym ".CONT.")))
@@ -470,7 +485,7 @@ in KEYWORDS removed."
   "Returns the amount of space given by SPECIFICATION relating to the
 STREAM in the direction DIRECTION."
   ;; This implementation lives unter the assumption that an
-  ;; extended-output stream is also a sheet and has a graft. 
+  ;; extended-output stream is also a sheet and has a graft.
   ;; --GB 2002-08-14
   (etypecase specification
     (integer specification)
@@ -501,7 +516,7 @@ STREAM in the direction DIRECTION."
               ((:point)  (setf value (/ value 72) unit :inches))
               ((:pixel)  (setf unit :device))
               ((:mm)     (setf unit :millimeters)))
-            ;; 
+            ;;
             (multiple-value-bind (dx dy)
                 (multiple-value-call
                     #'transform-distance
@@ -524,11 +539,11 @@ STREAM in the direction DIRECTION."
      for (list-item) = tail
      if (funcall test item (funcall key list-item))
        do (return-from delete-1
-	    (if tail-prev
-		(progn
-		  (setf (cdr tail-prev) (cdr tail))
-		  (values list t))
-		(values (cdr tail) t)))
+            (if tail-prev
+                (progn
+                  (setf (cdr tail-prev) (cdr tail))
+                  (values list t))
+                (values (cdr tail) t)))
      finally (return (values list nil))))
 
 ;;; Why do I feel like I've written this function 8 million times
@@ -588,8 +603,8 @@ STREAM in the direction DIRECTION."
      (substitute
       #\Space #\-
       (subseq name (if (string= '#:com- name :end2 (min (length name) 4))
-		       4
-		       0))))))
+                       4
+                       0))))))
 
 (defun keyword-arg-name-from-symbol (symbol)
   (let ((name (symbol-name symbol)))
