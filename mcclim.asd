@@ -140,7 +140,7 @@
                  (:file "design" :depends-on ("decls" "protocol-classes" "Lisp-Dep" "utils"))
                  (:file "X11-colors" :depends-on ("decls" "protocol-classes" "Lisp-Dep" "design"))
                  (:file "coordinates" :depends-on ("decls" "protocol-classes" "Lisp-Dep"))
-                 (:file "setf-star" :depends-on ("decls" "Lisp-Dep"))
+                 (:file "setf-star" :depends-on ("decls" "Lisp-Dep" "utils"))
                  (:file "transforms" :depends-on ("decls" "protocol-classes" "Lisp-Dep" "coordinates" "utils"))
                  (:file "dead-keys" :depends-on ("decls"))
                  (:file "regions" :depends-on ("decls" "protocol-classes" "Lisp-Dep" "coordinates" "utils" "transforms" "setf-star" "design"))
