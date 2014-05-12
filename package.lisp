@@ -24,6 +24,7 @@
   (defpackage #:clim-lisp
     (:use #:trivial-gray-streams
           #:cl)
+    (:shadow cl:describe)
     #+ecl (:shadowing-import-from
            #:clim-lisp-compat
            #:interactive-stream-p)
