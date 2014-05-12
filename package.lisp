@@ -24,7 +24,7 @@
   (defpackage #:clim-lisp
     (:use #:trivial-gray-streams
           #:cl)
-    (:shadow cl:describe)
+    (:shadow cl:describe cl:read cl:read-preserving-whitespace)
     #+ecl (:shadowing-import-from
            #:clim-lisp-compat
            #:interactive-stream-p)
@@ -33,7 +33,11 @@
   (let ((p-cl (find-package '#:cl))
         (p-gray (find-package '#:trivial-gray-streams))
         (p-climcl (find-package '#:clim-lisp))
-        (no-export '(cl:interactive-stream-p)))
+        (no-export '(cl:interactive-stream-p
+                     cl:describe
+                     cl:read
+                     cl:read-preserving-whitespace
+                     )))
 
     (do-external-symbols (s p-cl)
       (unless (find s (the list no-export) :test #'eq)
@@ -1826,6 +1830,7 @@
 (defpackage :clim-internals
   (:use :clim :clim-sys :clim-extensions :clim-backend :clim-lisp)
   (:nicknames :climi)
+  (:shadowing-import-from #:clim-lisp #:read)
   #+excl
   (:import-from :excl compile-system load-system)
   (:intern #:letf))

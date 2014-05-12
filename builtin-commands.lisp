@@ -13,14 +13,14 @@
 ;;; Library General Public License for more details.
 ;;;
 ;;; You should have received a copy of the GNU Library General Public
-;;; License along with this library; if not, write to the 
-;;; Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+;;; License along with this library; if not, write to the
+;;; Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 ;;; Boston, MA  02111-1307  USA.
 
 (in-package :clim-internals)
 
 ;;; Commands and presentation translators that live in the
-;;; global-command-table. 
+;;; global-command-table.
 
 ;;; Global help command
 
@@ -30,39 +30,39 @@
 
 (define-command (com-help :command-table global-command-table :name "Help")
     ((kind '(completion (("Keyboard" keyboard) ("Commands" commands))
-	                :value-key cadr)
-	   :prompt "with"
-	   :default 'keyboard
-	   :display-default nil))
+                        :value-key cadr)
+           :prompt "with"
+           :default 'keyboard
+           :display-default nil))
   (if (eq kind 'keyboard)
       (format *query-io* "Input editor commands are like Emacs.~%")
       (let ((command-table (frame-command-table *application-frame*))
-	    (command-names nil))
-	(map-over-command-table-names #'(lambda (name command)
-					  (push (cons name command)
-						command-names))
-				      command-table)
-	(setf command-names (remove-duplicates command-names :key #'cdr))
-	(setf command-names (sort command-names #'(lambda (a b)
-						    (string-lessp (car a)
-								  (car b)))))
+            (command-names nil))
+        (map-over-command-table-names #'(lambda (name command)
+                                          (push (cons name command)
+                                                command-names))
+                                      command-table)
+        (setf command-names (remove-duplicates command-names :key #'cdr))
+        (setf command-names (sort command-names #'(lambda (a b)
+                                                    (string-lessp (car a)
+                                                                  (car b)))))
         (formatting-item-list (*query-io*)
           (loop
-	     for (nil . command) in command-names
-	     do (formatting-cell (*query-io*)
-		 (present command
-			  `(command-name :command-table ,command-table)
-			  :stream *query-io*)))))))
+             for (nil . command) in command-names
+             do (formatting-cell (*query-io*)
+                 (present command
+                          `(command-name :command-table ,command-table)
+                          :stream *query-io*)))))))
 
-  
+
 ;;; Describe command.  I don't know if this should go in the global command
 ;;; table, but we don't exactly have a surplus of commands yet...
 
 (define-command (com-describe :command-table global-command-table
-			      :name "Describe")
+                              :name "Describe")
     ((obj 'expression
-	  :prompt "object"
-	  :gesture :describe))
+          :prompt "object"
+          :gesture :describe))
   (describe obj *query-io*))
 
 ;;; Another somewhat gratuitous command...
@@ -80,7 +80,7 @@
     (t com-describe-presentation global-command-table
      :gesture :describe-presentation
      :tester ((presentation)
-	      (not (eq presentation *null-presentation*)))
+              (not (eq presentation *null-presentation*)))
      :documentation "Describe Presentation"
      :pointer-documentation "Describe Presentation"
      :menu presentation-debugging)
@@ -158,7 +158,7 @@
      :menu nil
      :gesture :menu
      :tester (()
-	      *completion-possibilities-continuation*))
+              *completion-possibilities-continuation*))
   ()
   (funcall *completion-possibilities-continuation*))
 
@@ -173,44 +173,44 @@
   (present object 'form :stream stream))
 
 (macrolet ((%frob-exp (type-name)
-	     (let ((expression-translator-name (symbol-concat
-						type-name
-						'-to-expression)))
-	       `(define-presentation-translator ,expression-translator-name
-		    (,type-name expression global-command-table
-				:gesture :select
-				:menu nil)
-		  (object)
-		  object)))
-	   (%frob-constant-form (type-name)
-	     (let ((form-translator-name (symbol-concat type-name '-to-form)))
-	      `(define-presentation-translator ,form-translator-name
-		   (,type-name form global-command-table
-			       :gesture :select
-			       :menu nil
-			       :documentation document-form-translator)
-		 (object)
-		 object)))
-	   (%frob-form (type-name)
-	     (let ((form-translator-name (symbol-concat type-name '-to-form)))
-	       `(define-presentation-translator ,form-translator-name
-		    (,type-name form global-command-table
-				:gesture :select
-				:menu nil
-				:documentation document-form-translator)
-		  (object)
-		  (if (constantp object)
-		      object
-		      `',object))))
-	   
-	   (frob (type-name)
-	     `(progn
-		(%frob-exp ,type-name)
-		(%frob-constant-form ,type-name)))
-	   (frob-form (type-name)
-	     `(progn
-		(%frob-exp ,type-name)
-		(%frob-form ,type-name))))
+             (let ((expression-translator-name (symbol-concat
+                                                type-name
+                                                '-to-expression)))
+               `(define-presentation-translator ,expression-translator-name
+                    (,type-name expression global-command-table
+                                :gesture :select
+                                :menu nil)
+                  (object)
+                  object)))
+           (%frob-constant-form (type-name)
+             (let ((form-translator-name (symbol-concat type-name '-to-form)))
+              `(define-presentation-translator ,form-translator-name
+                   (,type-name form global-command-table
+                               :gesture :select
+                               :menu nil
+                               :documentation document-form-translator)
+                 (object)
+                 object)))
+           (%frob-form (type-name)
+             (let ((form-translator-name (symbol-concat type-name '-to-form)))
+               `(define-presentation-translator ,form-translator-name
+                    (,type-name form global-command-table
+                                :gesture :select
+                                :menu nil
+                                :documentation document-form-translator)
+                  (object)
+                  (if (constantp object)
+                      object
+                      `',object))))
+
+           (frob (type-name)
+             `(progn
+                (%frob-exp ,type-name)
+                (%frob-constant-form ,type-name)))
+           (frob-form (type-name)
+             `(progn
+                (%frob-exp ,type-name)
+                (%frob-form ,type-name))))
   (frob null)
   (frob boolean)
   (frob keyword)
@@ -234,14 +234,14 @@
 
 ;;; I changed :menu nil to :menu t because :literal-expression is hard for me
 ;;; to type on my Mac :) I'm not sure why I excluded this from the menu
-;;; originally. 
+;;; originally.
 (define-presentation-translator expression-as-form
     (expression form global-command-table
      :gesture :literal-expression
      :menu t
      :documentation "expression as literal"
      :tester ((object)
-	      (or (symbolp object) (consp object)))
+              (or (symbolp object) (consp object)))
      :tester-definitive t)
   (object)
   (values object 'form))
@@ -252,8 +252,8 @@
 (define-presentation-type list-terminator ()
   :inherit-from 'form)
 
-(defvar *sys-read* #'read)
-(defvar *sys-read-preserving-whitespace* #'read-preserving-whitespace)
+(defvar *sys-read* #'cl:read)
+(defvar *sys-read-preserving-whitespace* #'cl:read-preserving-whitespace)
 
 ;;; Arguments for read
 (defvar *eof-error-p* t)
@@ -284,26 +284,26 @@
 (defun ccl::%read-list-expression (stream *dot-ok* &optional (*termch* #\)))
   (if (typep stream 'input-editing-stream)
       (progn
-	;; Eat "whitespace" so it is not deleted by presentation-replace-input
-	(let ((gesture (read-gesture :stream stream :timeout 0 :peek-p t)))
-	  (when (and gesture
-		     (or (activation-gesture-p gesture)
-			 (delimiter-gesture-p gesture)
-			 (and (characterp gesture)
-			      (whitespacep gesture))))  
-	    (read-gesture :stream stream)))
-	(multiple-value-bind (object type)
-	    (accept '((expression) :subform-read t) :stream stream :prompt nil)
-	  (values object (if (presentation-subtypep type 'list-terminator)
-			     nil
-			     t))))
+        ;; Eat "whitespace" so it is not deleted by presentation-replace-input
+        (let ((gesture (read-gesture :stream stream :timeout 0 :peek-p t)))
+          (when (and gesture
+                     (or (activation-gesture-p gesture)
+                         (delimiter-gesture-p gesture)
+                         (and (characterp gesture)
+                              (whitespacep gesture))))
+            (read-gesture :stream stream)))
+        (multiple-value-bind (object type)
+            (accept '((expression) :subform-read t) :stream stream :prompt nil)
+          (values object (if (presentation-subtypep type 'list-terminator)
+                             nil
+                             t))))
       (funcall *sys-%read-list-expression* stream *dot-ok* *termch*)))
-) 					; with-system-redefinition-allowed
+)                                       ; with-system-redefinition-allowed
 
 (define-presentation-method accept ((type expression) stream (view textual-view)
-				    &key)
+                                    &key)
   (let* ((object nil)
-	 (ptype nil))
+         (ptype nil))
     #.(funcall (if #+openmcl t #-openmcl nil #'identity #'fourth)
                `(if subform-read
                     (multiple-value-bind (val valid)
@@ -331,26 +331,26 @@
     (unless (presentation-subtypep ptype 'expression)
       (setq ptype 'expression))
     (if (or subform-read auto-activate)
-	(values object ptype)
-	(loop
-	   for c = (read-char stream)
-	   until (or (activation-gesture-p c) (delimiter-gesture-p c))
-	   finally
-	     (when (delimiter-gesture-p c)
-	       (unread-char c stream))
-	     (return (values object ptype))))))
+        (values object ptype)
+        (loop
+           for c = (read-char stream)
+           until (or (activation-gesture-p c) (delimiter-gesture-p c))
+           finally
+             (when (delimiter-gesture-p c)
+               (unread-char c stream))
+             (return (values object ptype))))))
 
 (define-presentation-method accept ((type expression)
                                     (stream input-editing-stream)
                                     (view textual-view)
-				    &key)
+                                    &key)
   ;; This method is specialized to
   ;; input-editing-streams and has thus been
   ;; made slightly more tolerant of input
   ;; errors. It is slightly hacky, but seems
   ;; to work fine.
   (let* ((object nil)
-	 (ptype nil))
+         (ptype nil))
     #.(funcall (if #+openmcl t #-openmcl nil #'identity #'fourth)
                `(if (and #-openmcl nil subform-read)
                     (multiple-value-bind (val valid)
@@ -388,11 +388,11 @@
     (unless (presentation-subtypep ptype 'expression)
       (setq ptype 'expression))
     (if (or subform-read auto-activate)
-	(values object ptype)
-	(loop
-	   for c = (read-char stream)
-	   until (or (activation-gesture-p c) (delimiter-gesture-p c))
-	   finally
+        (values object ptype)
+        (loop
+           for c = (read-char stream)
+           until (or (activation-gesture-p c) (delimiter-gesture-p c))
+           finally
            (when (delimiter-gesture-p c)
              (unread-char c stream))
            (return (values object ptype))))))
@@ -400,27 +400,27 @@
 
 (with-system-redefinition-allowed
 (defun read (&optional (stream *standard-input*)
-	     (eof-error-p t)
-	     (eof-value nil)
-	     (recursivep nil))
+             (eof-error-p t)
+             (eof-value nil)
+             (recursivep nil))
   (if (typep stream 'input-editing-stream)
       (let ((*eof-error-p* eof-error-p)
-	    (*eof-value* eof-value)
-	    (*recursivep* recursivep))
-	(accept '((expression) :auto-activate t :preserve-whitespace nil)
-		:stream stream :prompt nil))
+            (*eof-value* eof-value)
+            (*recursivep* recursivep))
+        (accept '((expression) :auto-activate t :preserve-whitespace nil)
+                :stream stream :prompt nil))
       (funcall *sys-read* stream eof-error-p eof-value recursivep)))
 
 (defun read-preserving-whitespace (&optional (stream *standard-input*)
-	     (eof-error-p t)
-	     (eof-value nil)
-	     (recursivep nil))
+             (eof-error-p t)
+             (eof-value nil)
+             (recursivep nil))
   (if (typep stream 'input-editing-stream)
       (let ((*eof-error-p* eof-error-p)
-	    (*eof-value* eof-value)
-	    (*recursivep* recursivep))
-	(accept '((expression) :auto-activate t :preserve-whitespace t)
-		:stream stream :prompt nil))
+            (*eof-value* eof-value)
+            (*recursivep* recursivep))
+        (accept '((expression) :auto-activate t :preserve-whitespace t)
+                :stream stream :prompt nil))
       (funcall *sys-read-preserving-whitespace*
-	       stream eof-error-p eof-value recursivep)))
+               stream eof-error-p eof-value recursivep)))
 ) ; with-system-redefinition-allowed
