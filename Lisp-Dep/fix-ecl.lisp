@@ -1,6 +1,37 @@
 ;;;; Support for the Embeddable Common Lisp.
 
+
 ;; originally derived from fix-scl.lisp
+
+;; ECL defines a function GRAY::REDEFINE-CL-FUNCTIONS, which is used
+;; by trivial-gray-streams. The function serves to ensure that some
+;; functions for stream operation, such as are defined in ANSI Common
+;; Lisp as functions and defined as generic functions in Gray Streams,
+;; will be defined in the ECL CL package with, in each, the
+;; fdefinition of the corresponding generic function defined in the
+;; ECL GRAY package.
+;;
+;; CL:INTERACTIVE-STREAM-P is not one of those redefined functions.
+;;
+;; Rather than chaging the symbol's fdefinition, the following form
+;; will define a generic function interface onto
+;; CL:INTERACTIVE-STREAM-P, such as to allow for definition of
+;; methods onto a generic function INTERACTIVE-STREAM-P, in McCLIM
+
+(in-package #:cl-user)
+
+(eval-when (:compile-toplevel :load-toplevel :execute)
+  (defpackage #:clim-lisp-compat
+    (:use #:cl)
+    (:shadow cl:interactive-stream-p)
+    (:export #:interactive-stream-p)))
+
+(in-package #:clim-lisp-compat)
+
+(defgeneric interactive-stream-p (stream)
+  (:method ((stream stream))
+    (cl:interactive-stream-p stream)))
+
 
 
 
