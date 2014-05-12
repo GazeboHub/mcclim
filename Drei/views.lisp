@@ -62,9 +62,9 @@ invoking the debugger)."))
               :initform *use-tabs-for-indentation*
               :initarg :use-tabs)
    (%tab-stops :accessor tab-stops
-	       :initform '()
-	       :initarg :tab-stops
-	       :documentation "A list of tab-stops in device units.
+               :initform '()
+               :initarg :tab-stops
+               :documentation "A list of tab-stops in device units.
 If empty, tabs every TAB-WIDTH are assumed.")))
 
 (defun maybe-update-recordings (stream tabify)
@@ -97,21 +97,21 @@ If empty, tabs every TAB-WIDTH are assumed.")))
 on `stream' in device units (most likely pixels).")
   (:method ((stream extended-output-stream) (tabify tabify-mixin) x)
     (flet ((round-up (x width)
-	     (- width (mod x width))))
+             (- width (mod x width))))
       (if (tab-stops tabify)
-	(let ((next (find-if (lambda (pos) (> pos x)) (tab-stops tabify))))
-	  (or (and next (- next x)) (round-up x (space-width stream tabify))))
-	(round-up x (tab-width stream tabify))))))
+        (let ((next (find-if (lambda (pos) (> pos x)) (tab-stops tabify))))
+          (or (and next (- next x)) (round-up x (space-width stream tabify))))
+        (round-up x (tab-width stream tabify))))))
 
 (defgeneric (setf tab-stop-columns) (column-list tabify)
   (:documentation "Set the TAB-STOPS of view at the character column offsets
 in `column-list'.")
   (:method (column-list (tabify tabify-mixin))
-    (setf (tab-stops tabify) 
-	  (and column-list
-	       (sort (mapcar (lambda (col) (* col (space-width (recorded-stream tabify) tabify)))
-			     column-list) 
-		     #'<)))))
+    (setf (tab-stops tabify)
+          (and column-list
+               (sort (mapcar (lambda (col) (* col (space-width (recorded-stream tabify) tabify)))
+                             column-list)
+                     #'<)))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
@@ -189,12 +189,12 @@ undo tree."))
 
 (defclass change-record (simple-undo-record)
   ((objects :initarg :objects
-	    :documentation "The sequence of objects that are to 
-replace the records that are currently in the buffer at the 
-offset whenever flip-undo-record is called on an instance of 
+            :documentation "The sequence of objects that are to
+replace the records that are currently in the buffer at the
+offset whenever flip-undo-record is called on an instance of
 change-record"))
-  (:documentation "Whenever objects are modified, a 
-`change-record' containing a mark is created and added to the 
+  (:documentation "Whenever objects are modified, a
+`change-record' containing a mark is created and added to the
 undo tree."))
 
 (defclass compound-record (drei-undo-record)
@@ -226,28 +226,28 @@ records."))
   (unless (performing-undo buffer)
     (push (make-instance 'delete-record
                          :buffer buffer :offset offset :length 1)
-	  (undo-accumulate buffer))))
+          (undo-accumulate buffer))))
 
 (defmethod insert-buffer-sequence :before ((buffer undo-mixin) offset sequence)
   (unless (performing-undo buffer)
     (push (make-instance 'delete-record
                          :buffer buffer :offset offset :length (length sequence))
-	  (undo-accumulate buffer))))
+          (undo-accumulate buffer))))
 
 (defmethod delete-buffer-range :before ((buffer undo-mixin) offset n)
   (unless (performing-undo buffer)
     (push (make-instance 'insert-record
                          :buffer buffer :offset offset
                          :objects (buffer-sequence buffer offset (+ offset n)))
-	  (undo-accumulate buffer))))
+          (undo-accumulate buffer))))
 
 (defmethod (setf buffer-object) :before (new-object (buffer undo-mixin) offset)
   (unless (performing-undo buffer)
     (push (make-instance 'change-record
-			 :buffer buffer
-			 :offset offset
-			 :objects (buffer-sequence buffer offset (1+ offset)))
-	  (undo-accumulate buffer))))
+                         :buffer buffer
+                         :offset offset
+                         :objects (buffer-sequence buffer offset (1+ offset)))
+          (undo-accumulate buffer))))
 
 (defmacro with-undo ((get-buffers-exp) &body body)
   "This macro executes the forms of `body', registering changes
@@ -298,7 +298,7 @@ all."
 (defmethod flip-undo-record ((record change-record))
   (with-slots (buffer offset objects) record
     (loop for i from 0 below (length objects)
-	  do (rotatef (aref objects i) (buffer-object buffer (+ i offset))))))
+          do (rotatef (aref objects i) (buffer-object buffer (+ i offset))))))
 
 (defmethod flip-undo-record ((record compound-record))
   (with-slots (records) record
@@ -347,8 +347,8 @@ preventing the undoing to before the state of whatever
 (define-condition buffer-read-only (user-condition-mixin simple-error)
   ((buffer :reader condition-buffer :initarg :buffer))
   (:report (lambda (condition stream)
-	     (format stream "Attempt to change read only buffer: ~a"
-		     (condition-buffer condition))))
+             (format stream "Attempt to change read only buffer: ~a"
+                     (condition-buffer condition))))
   (:documentation "This condition is signalled whenever an attempt
 is made to alter a buffer which has been set read only."))
 
@@ -585,7 +585,6 @@ page up."))
   ((%buffer :accessor buffer
             :initarg :buffer
             :type drei-buffer
-            :accessor buffer
             :documentation "The buffer that is observed by this
 buffer view.")
    (%top :accessor top
@@ -669,6 +668,8 @@ are automatically set if applicable."))
 
 (defmethod (setf bot) :after (new-value (view drei-buffer-view))
   (invalidate-all-strokes view))
+
+(defgeneric (setf buffer) (buffer view))
 
 (defmethod (setf buffer) :after (buffer (view drei-buffer-view))
   (invalidate-all-strokes view)
@@ -986,7 +987,7 @@ buffer."))
 
 (defun needs-resynchronization (view)
   "Return true if the the view of the buffer of `view' is
-potentially out of date. Return false otherwise."  
+potentially out of date. Return false otherwise."
   (not (= (prefix-size view) (suffix-size view)
           (buffer-size view) (size (buffer view)))))
 
