@@ -36,10 +36,11 @@
 
 
 (defpackage :clim-mop
-  (:use :clos))
+  (:use #:clos #:cl))
 
 (eval-when (:compile-toplevel :load-toplevel :execute)
   (loop for sym being the symbols of :clim-mop
+       ;; FIXME: use c2mop (also for CCL)
         do (export sym :clim-mop)))
 
 ;; (eval-when (:compile-toplevel :load-toplevel :execute)
