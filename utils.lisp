@@ -609,3 +609,7 @@ STREAM in the direction DIRECTION."
 (defun keyword-arg-name-from-symbol (symbol)
   (let ((name (symbol-name symbol)))
     (string-capitalize (substitute #\Space #\- name))))
+
+
+(define-condition simple-style-warning (simple-condition style-warning)
+  ())
