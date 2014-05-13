@@ -33,11 +33,12 @@
 ;;;; Lines containing only a SYMBOL that are followed by indented
 ;;;; lines are marked up as @table @code, with the SYMBOL as the item.
 
+#+SBCL
 (eval-when (:compile-toplevel :load-toplevel :execute)
   (require 'sb-introspect))
 
 (defpackage :cl-docextractor
-  (:use :cl :sb-mop :cl-ppcre)
+  (:use :cl #-SBCL :clim-mop #+SBCL :sb-mop :cl-ppcre)
   (:shadow #:documentation)
   (:export #:documentee #:document)
   (:documentation
@@ -382,16 +383,20 @@ used for such things as file- and node-names."))
                  :kind 'method
                  :string string))
 
+
 (defmethod make-documentation (x (doc-type (eql 'type)) string)
   (make-instance 'documentation
                  :name (name x)
                  :short-name (short-name x)
                  :string string
-                 :kind (etypecase (find-class x nil)
-                         (structure-class 'structure)
-                         (standard-class 'class)
-                         (sb-pcl::condition-class 'condition)
-                         ((or built-in-class null) 'type))))
+                 :kind
+                 (etypecase
+                  (find-class x nil)
+                  (condition 'condition)
+                  (structure-class 'structure)
+                  (standard-class 'class)
+                  ((or built-in-class null) 'type)
+                  )))
 
 (defmethod make-documentation (x (doc-type (eql 'variable)) string)
   (make-instance 'documentation
@@ -469,7 +474,7 @@ X and DOC-TYPE, or NIL if there is no corresponding docstring."))
                       (cond ((or key optional) (car x))
                             (t (clean (car x))))
                       (clean (cdr x) :key key :optional optional))))))
-         (clean (sb-introspect:function-arglist (get-name doc))))))))
+         (clean (swank-backend:arglist (get-name doc))))))))
 
 (defun documentation< (x y)
   (let ((p1 (position (get-kind x) *ordered-documentation-kinds*))
@@ -767,10 +772,17 @@ followed another tabulation label or a tabulation body."
   (cond ((member (get-kind doc) '(class structure condition))
          (let ((name (get-name doc)))
            ;; class precedence list
-           (format *texinfo-output* "Class precedence list: @code{~(~{@w{~A}~^, ~}~)}~%~%"
-                   (remove-if (lambda (class)  (hide-superclass-p name class))
-                              (mapcar #'class-name (class-precedence-list (progn (finalize-inheritance (find-class name))
-                                                                                 (find-class name))))))
+           (format *texinfo-output*
+                   "Class precedence list: @code{~(~{@w{~A}~^, ~}~)}~%~%"
+                   (remove-if (lambda (class)
+                                (hide-superclass-p name class))
+                              (mapcar #'class-name
+                                      (class-precedence-list
+                                       (let ((c (find-class name)))
+                                         (unless (class-finalized-p c)
+                                           (finalize-inheritance
+                                            (find-class name)))
+                                         c)))))
            ;; slots
            (let ((slots (remove-if (lambda (slot) (hide-slot-p name slot))
                                    (class-direct-slots (find-class name)))))
@@ -786,11 +798,25 @@ followed another tabulation label or a tabulation body."
                (format *texinfo-output* "@end itemize~%~%")))))
         ((eq (get-kind doc) 'generic-function)
          (let* ((method-combination
-                 (sb-mop:generic-function-method-combination
+                 (clim-mop:generic-function-method-combination
                   (fdefinition (get-name doc))))
-                (combination-name (sb-pcl::method-combination-type-name
-                                   method-combination))
-                (options (sb-pcl::method-combination-options method-combination)))
+                (combination-name
+                 #+SBCL
+                  (sb-pcl::method-combination-type-name method-combination)
+                  #+CCL
+                  (ccl::method-combination-name method-combination)
+                  #-(or SBCL CCL)
+                  (error "Unsupported: METHOD-COMBINATION-NAME ~S"
+                         method-combination))
+                (options
+                 #+SBCL
+                  (sb-pcl::method-combination-options method-combination)
+                  #+CCL
+                  (ccl::method-combination-options method-combination)
+                  #-(or SBCL CCL)
+                  (error "Unsupported: METHOD-COMBINATION-OPTIONS ~S"
+                         method-combination)
+                  ))
            (unless (eq combination-name 'standard)
              (format *texinfo-output*
                      "Method combination: @code{~A} (~(~{@w{~A}~^, ~}~))~%~%"

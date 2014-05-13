@@ -17,11 +17,20 @@ TARGETIMAGES=$(shell sh ./makeimages.sh -e "$(IMAGES)" "$(IMAGETARGETTYPES)")
 DOCSTRINGDIR="docstrings/"
 I_FLAGS=-I $(DOCSTRINGDIR)
 
-# SBCL_SYSTEM is an optional argument to this make program. If this
-# variable is set, its contents are used as the command line for
-# invoking SBCL.
 
-# When passing a non-standard SBCL_SYSTEM, be sure to set the
+# LISP_SYSTEM is an optional argument to this make program. If this
+# variable is set, its contents are used as the command line for
+# invoking the respective Lisp implementation. namely when running the
+# shell script make-tempfiles.sh
+
+# Example LISP_SYSTEM for CCL ARM with user init file:
+# LISP_SYSTEM="armcl -b -Q"
+
+# Note that (REQUIRE :ASDF) should load ASDF in the respective Lisp
+# implementation, unless ASDF is already avaialble in the Lisp
+# implementation. See also: make-tempfiles.sh
+
+# When passing a non-standard SBCL LISP_SYSTEM, be sure to set the
 # environment variable SBCL_HOME to a useful value, as well.
 
 ifeq ($(MAKEINFO),)
@@ -84,7 +93,7 @@ info: $(INFOFILE)
 docstrings: tempfiles-stamp
 
 tempfiles-stamp:
-	DOCSTRINGDIR=$(DOCSTRINGDIR) PACKAGES=$(PACKAGES) sh make-tempfiles.sh "$(SBCL_SYSTEM)" && touch tempfiles-stamp
+	DOCSTRINGDIR=$(DOCSTRINGDIR) PACKAGES=$(PACKAGES) sh make-tempfiles.sh "$(LISP_SYSTEM)" && touch tempfiles-stamp
 
 
 .PHONY: softclean
