@@ -23,9 +23,6 @@ I_FLAGS=-I $(DOCSTRINGDIR)
 # invoking the respective Lisp implementation. namely when running the
 # shell script make-tempfiles.sh
 
-# Example LISP_SYSTEM for CCL ARM with user init file:
-# LISP_SYSTEM="armcl -b -Q"
-
 # Note that (REQUIRE :ASDF) should load ASDF in the respective Lisp
 # implementation, unless ASDF is already avaialble in the Lisp
 # implementation. See also: make-tempfiles.sh
