@@ -3,3 +3,13 @@ docstrings/
 *.pdf
 *.png
 tempfiles-stamp
+/*.aux
+/*.cp
+/*.fn
+/*.ky
+/*.log
+/*.pg
+/*.toc
+/*.tp
+/*.vr
+/*.eps
