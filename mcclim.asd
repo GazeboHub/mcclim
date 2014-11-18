@@ -36,8 +36,8 @@
   (defun find-swank-package ()
     (find-package :swank))
   (defun find-swank-system ()
-    (handler-case (asdf:find-system :swank)
-      (asdf:missing-component ())))
+    (handler-case (find-system :swank)
+      (missing-component ())))
   (defun find-swank ()
     (or (find-swank-package)
         (find-swank-system)))
@@ -68,7 +68,7 @@
          (format t "~%~%You need to run (mp::startup-idle-and-top-level-loops) to start up the multiprocessing support.~%~%")))
 
 ;;; Make CLX asdf-loadable on Allegro 6.2
-;;; possibly this should be further refined to funciton properly for
+;;; possibly this should be further refined to function properly for
 ;;; Allegro on Windows platforms. [2005/04/18:rpg]
 
 #+allegro
@@ -78,27 +78,13 @@
   (defmethod asdf:perform ((op asdf:load-op) (system requireable-system))
     (require (intern (slot-value system 'asdf::name) :keyword)))
   (defmethod asdf::traverse ((op asdf:load-op) (system requireable-system))
-    (list (cons op system)))
+    (list (cons op system)))  
   (defsystem :clx
     :class requireable-system))
 
 ;;; Clozure CL native GUI stuff
 #+clim-beagle
 (require :cocoa)
-
-(defmacro clim-defsystem ((module &key depends-on) &rest components)
-  `(progn
-     (asdf:defsystem ,module
-         ,@(and depends-on
-                `(:depends-on ,depends-on))
-         :serial t
-         :components
-         (,@(loop for c in components
-                  for p = (merge-pathnames
-                           (parse-namestring c)
-                           (make-pathname :type "lisp"
-                                          :defaults *clim-directory*))
-                  collect `(:file ,(namestring p) :pathname ,p))))))
 
 (defsystem :clim-lisp
     :depends-on ("trivial-gray-streams")
@@ -206,7 +192,6 @@
   :depends-on (:clim-basic)
   :components
   ((:module "Backends/PostScript"
-            :pathname #.(make-pathname :directory '(:relative "Backends" "PostScript"))
             :components
             ((:file "package")
              (:file "encoding" :depends-on ("package"))
@@ -273,31 +258,29 @@
 (defsystem :drei-mcclim
   :depends-on ((:version "flexichain" "1.5.1") :esa-mcclim :clim-core #+#.(mcclim.system::dep-on-swank) :swank)
   :components
-  ((:module "cl-automaton"
-            :pathname #.(make-pathname :directory '(:relative "Drei" "cl-automaton"))
+  ((:module "Drei/cl-automaton"
             :components ((:file "automaton-package")
                          (:file "eqv-hash" :depends-on ("automaton-package"))
                          (:file "state-and-transition" :depends-on ("eqv-hash"))
                          (:file "automaton" :depends-on ("state-and-transition" "eqv-hash"))
                          (:file "regexp" :depends-on ("automaton"))))
-   (:module "Persistent"
-            :pathname #.(make-pathname :directory '(:relative "Drei" "Persistent"))
+   (:module "Drei/Persistent"
             :components ((:file "binseq-package")
                          (:file "binseq" :depends-on ("binseq-package"))
                          (:file "obinseq" :depends-on ("binseq-package" "binseq"))
                          (:file "binseq2" :depends-on ("binseq-package" "obinseq" "binseq"))))
-   (:module "Drei" :depends-on ("cl-automaton" "Persistent")
+   (:module "Drei" :depends-on ("Drei/cl-automaton" "Drei/Persistent")
             :components ((:file "packages")
                          (:file "buffer" :depends-on ("packages"))
                          (:file "delegating-buffer" :depends-on ("packages" "buffer"))
                          (:file "motion" :depends-on ("packages" "buffer" "syntax"))
                          (:file "editing" :depends-on ("packages" "buffer" "syntax" "motion" "kill-ring"))
-                         (:file "base" :depends-on ("packages" "buffer" "persistent-buffer" "kill-ring"
+                         (:file "base" :depends-on ("packages" "buffer" "Persistent/persistent-buffer" "kill-ring"
                                                                "delegating-buffer"))
                          (:file "syntax" :depends-on ("packages" "buffer" "base"))
                          (:file "modes" :depends-on ("packages" "syntax"))
-                         (:file "views" :depends-on ("packages" "buffer" "base" "syntax" "persistent-undo"
-                                                                "persistent-buffer" "undo" "abbrev"
+                         (:file "views" :depends-on ("packages" "buffer" "base" "syntax" "Persistent/persistent-undo"
+                                                                "Persistent/persistent-buffer" "undo" "abbrev"
                                                                 "delegating-buffer" "modes"))
                          (:file "drei" :depends-on ("packages" "views" "motion" "editing"))
                          (:file "drei-clim" :depends-on ("drei"))
@@ -314,14 +297,9 @@
                          (:file "rectangle" :depends-on ("core"))
                          (:file "targets" :depends-on ("core"))
                          (:file "core-commands" :depends-on ("core" "rectangle" "drei-clim"))
-                         (:file "persistent-buffer"
-                                :pathname #.(make-pathname :directory '(:relative "Persistent")
-                                                           :name "persistent-buffer"
-                                                           :type "lisp")
-                                :depends-on ("packages"))
-                         (:file "persistent-undo"
-                                :pathname #p"Persistent/persistent-undo.lisp"
-                                :depends-on ("packages" "buffer" "persistent-buffer" "undo"))
+                         (:file "Persistent/persistent-buffer" :depends-on ("packages"))
+                         (:file "Persistent/persistent-undo"
+                                :depends-on ("packages" "buffer" "Persistent/persistent-buffer" "undo"))
                          (:file "misc-commands" :depends-on ("basic-commands"))
                          (:file "search-commands" :depends-on ("core" "targets" "drei-clim"))
                          (:file "lr-syntax" :depends-on ("fundamental-syntax" "core" "drawing-options"))
@@ -333,9 +311,8 @@
 (defsystem :drei-tests
   :depends-on (:drei-mcclim :fiveam)
   :components
-  ((:module "Tests"
-            :pathname #.(make-pathname :directory '(:relative "Drei" "Tests"))
-            :components
+  ((:module "Drei/Tests"
+            :components 
             ((:module
               "cl-automaton"
               :depends-on ("testing")
@@ -361,43 +338,36 @@
 (defsystem :clim
   :depends-on (:clim-core :goatee-core :clim-postscript :drei-mcclim)
   :components
-  ((:file "Goatee/presentation-history" ; XXX: this is loaded as part of the Goatee system. huh?
-          :pathname #.(make-pathname :directory '(:relative "Goatee") :name "presentation-history" :type "lisp"))
+  (;;(:file "Goatee/presentation-history") ; XXX: this is loaded as part of the Goatee system. huh?
    (:file "input-editing-goatee")
    (:file "input-editing-drei")
    (:file "text-editor-gadget")
-   (:file "Extensions/tab-layout"
-          :pathname #.(make-pathname :directory '(:relative "Extensions")
-                                     :name "tab-layout"))))
+   (:file "Extensions/tab-layout")))
+
+#+clisp
+(when (and (find-package :xlib)
+           ;; Just some random symbol I know is unexported in CLISP's CLX.
+           (not (eq (nth-value 1 (find-symbol "SET-SELECTION-OWNER" :xlib)) :external)))
+  (warn "~@<CLISP provided you a CLX that is not capable of running the McCLIM CLX backend.
+Deleting it, that it may be replaced with a working one.~@:>")
+  (ext:without-package-lock ("XLIB")
+    (delete-package :xlib)))
+
 
 (defsystem :clim-clx
-    :depends-on (:clim #+(or sbcl openmcl ecl allegro) :clx)
+  :depends-on (:clim #+(or sbcl openmcl ecl clisp allegro) :clx)
+  :components
+  ((:module "Backends/CLX"
     :components
-    ((:module "Backends/CLX"
-              :pathname #.(make-pathname :directory '(:relative "Backends" "CLX"))
-              :components
-              ((:file "package")
-               (:file "image" :depends-on ("package"))
-               (:file "keysyms-common" :depends-on ("package"))
-               (:file "keysyms" :depends-on ("keysyms-common" "package"))
-               (:file "keysymdef" :depends-on ("keysyms-common" "package"))
-               (:file "port" :depends-on ("keysyms-common" "keysyms" "package"))
-               (:file "medium" :depends-on ("port" "keysyms" "package"))
-               (:file "graft" :depends-on ("port" "package"))
-               (:file "frame-manager" :depends-on ("medium" "port" "package"))))))
-#+clisp
-(defmethod asdf::traverse :around ((op compile-op) (c (eql (find-system :clim-clx))))
-  ;; Just some random symbol I know is unexported in CLISP's CLX.
-  (if (eq (nth-value 1 (find-symbol "SET-SELECTION-OWNER" :xlib))
-       :external)
-      (call-next-method)
-      (restart-case (error "Your CLX is not capable of running the McCLIM CLX backend")
-        (load-clx-via-asdf ()
-         :report "Try replacing your CLX with a CLX loaded through ASDF, hopefully this will be Telent CLX."
-         (ext:without-package-lock ("XLIB")
-           (delete-package :xlib)
-           (asdf:oos 'asdf:load-op :clx))
-         (call-next-method)))))
+    ((:file "package")
+     (:file "image" :depends-on ("package"))
+     (:file "keysyms-common" :depends-on ("package"))
+     (:file "keysyms" :depends-on ("keysyms-common" "package"))
+     (:file "keysymdef" :depends-on ("keysyms-common" "package"))
+     (:file "port" :depends-on ("keysyms-common" "keysyms" "package"))
+     (:file "medium" :depends-on ("port" "keysyms" "package"))
+     (:file "graft" :depends-on ("port" "package"))
+     (:file "frame-manager" :depends-on ("medium" "port" "package"))))))
 
 (defsystem :clim-beagle
   :depends-on (clim)
@@ -461,14 +431,13 @@
                 :components ((:file "profile")))
                (:module "tests"
                 :components ((:file "drawing-tests")
-                             (:file "graft-tests"))))))))
-)
+                             (:file "graft-tests")))))))))
+
 
 (defsystem :clim-null
     :depends-on (:clim)
     :components
     ((:module "Backends/Null"
-              :pathname #.(make-pathname :directory '(:relative "Backends" "Null"))
               :components
               ((:file "package")
                (:file "port" :depends-on ("package"))
@@ -480,8 +449,7 @@
     :depends-on (:clim :cffi)
     :components
     ((:module "Backends/gtkairo"
-              :pathname #.(make-pathname :directory '(:relative "Backends" "gtkairo"))
-              :serial t			;asf wird's ja richten
+              :serial t                 ;asf wird's ja richten
               :components
               ((:file "clim-fix")
                (:file "package")
@@ -504,7 +472,6 @@
     :depends-on (:clim :graphic-forms-uitoolkit)
     :components
     ((:module "Backends/Graphic-Forms"
-              :pathname #.(make-pathname :directory '(:relative "Backends" "Graphic-Forms"))
               :components
               ((:file "package")
          (:file "utils" :depends-on ("package"))
@@ -516,14 +483,17 @@
          (:file "gadgets" :depends-on ("port"))))))
 
 ;;; TODO/asf: I don't have the required libs to get :clim-opengl to load. tough.
-(clim-defsystem (:clim-opengl :depends-on (:clim))
-   "Backends/OpenGL/opengl-x-frame-manager"
-   "Backends/OpenGL/opengl-frame-manager"
-   "Backends/OpenGL/opengl-x-port-before"
-   "Backends/OpenGL/opengl-port"
-   "Backends/OpenGL/opengl-x-port-after"
-   "Backends/OpenGL/opengl-medium"
-   "Backends/OpenGL/opengl-x-graft")
+(defsystem :clim-opengl
+  :depends-on (:clim)
+  :serial t
+  :components
+  ((:file "Backends/OpenGL/opengl-x-frame-manager")
+   (:file "Backends/OpenGL/opengl-frame-manager")
+   (:file "Backends/OpenGL/opengl-x-port-before")
+   (:file "Backends/OpenGL/opengl-port")
+   (:file "Backends/OpenGL/opengl-x-port-after")
+   (:file "Backends/OpenGL/opengl-medium")
+   (:file "Backends/OpenGL/opengl-x-graft")))
 
 ;;; A system that loads the appropriate backend for the current
 ;;; platform.
@@ -546,8 +516,7 @@
                  :clim-null
                  )
     :components (#-(or clim-gtkairo clim-graphic-forms clim-beagle)
-                 (:file "Looks/pixie"
-                        :pathname #.(make-pathname :directory '(:relative "Looks") :name "pixie" :type "lisp"))))
+                 (:file "Looks/pixie")))
 
 ;;; The actual McCLIM system that people should to use in their ASDF
 ;;; package dependency lists.
