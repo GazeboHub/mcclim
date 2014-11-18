@@ -1,4 +1,4 @@
-McCLIM 0.9.6 "St. George's Day"
+McCLIM 0.9.7-dev [MetaCommunity.info fork] "Leonids"
 
 This is McCLIM, an implementation of the "Common Lisp Interface
 Manager CLIM II Specification." It currently works on X Windows using
