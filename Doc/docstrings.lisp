@@ -40,6 +40,10 @@
 (defpackage :cl-docextractor
   (:use :cl #-SBCL :clim-mop #+SBCL :sb-mop :cl-ppcre)
   (:shadow #:documentation)
+  #+SBCL
+  (:shadowing-import-from 
+   #:sb-pcl
+   #:condition-class)
   (:export #:documentee #:document)
   (:documentation
    "Tools to generate Texinfo documentation from docstrings."))
@@ -392,6 +396,7 @@ used for such things as file- and node-names."))
                  :kind
                  (etypecase
                   (find-class x nil)
+                   #+SBCL (condition-class 'condition)
                   (condition 'condition)
                   (structure-class 'structure)
                   (standard-class 'class)
