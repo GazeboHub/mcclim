@@ -474,7 +474,7 @@ X and DOC-TYPE, or NIL if there is no corresponding docstring."))
                       (cond ((or key optional) (car x))
                             (t (clean (car x))))
                       (clean (cdr x) :key key :optional optional))))))
-         (clean (swank-backend:arglist (get-name doc))))))))
+         (clean (swank/backend:arglist (get-name doc))))))))
 
 (defun documentation< (x y)
   (let ((p1 (position (get-kind x) *ordered-documentation-kinds*))

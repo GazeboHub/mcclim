@@ -38,7 +38,7 @@ echo /creating docstring snippets from LISP=\'$LISPRUNTIME\' for packages \'$PAC
 $LISP <<EOF
 #-ASDF (require :asdf)
 (push (pathname "$SYSTEMSDIR") asdf:*central-registry*)
-(asdf:oos 'asdf:load-op :swank) ;; use swank-backend
+(asdf:oos 'asdf:load-op :swank) ;; use swank/backend
 (asdf:oos 'asdf:load-op :cl-ppcre)
 (asdf:oos 'asdf:load-op :mcclim)
 (load "docstrings.lisp")
