@@ -87,8 +87,9 @@
 (require :cocoa)
 
 (defsystem :clim-lisp
-    :depends-on ("trivial-gray-streams")
-    :components
+  :depends-on ("trivial-gray-streams"
+               "info.metacommunity.cltl.utils")
+  :components
   (;; First possible patches
    (:file "patch")
    (:module "Lisp-Dep"

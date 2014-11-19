@@ -610,6 +610,3 @@ STREAM in the direction DIRECTION."
   (let ((name (symbol-name symbol)))
     (string-capitalize (substitute #\Space #\- name))))
 
-
-(define-condition simple-style-warning (simple-condition style-warning)
-  ())

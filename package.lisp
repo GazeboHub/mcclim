@@ -23,7 +23,11 @@
 
   (defpackage #:clim-lisp
     (:use #:trivial-gray-streams
+          #:info.metacommunity.cltl.utils
           #:cl)
+    (:export ;; selected symbols inherited from #:utils 
+     #:simple-style-warning
+     ) 
     (:shadow cl:describe cl:read cl:read-preserving-whitespace)
     #+ecl (:shadowing-import-from
            #:clim-lisp-compat
