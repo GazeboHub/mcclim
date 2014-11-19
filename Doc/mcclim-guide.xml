@@ -146,7 +146,13 @@
           <glossterm>variable</glossterm> <glossterm>bound</glossterm> to
           a <glossterm>stream</glossterm> of a
           <glossterm>type</glossterm> appropriate to the containing
-          <glossterm>form</glossterm>.
+          <glossterm>form</glossterm>. As an extensional limitation
+          onto &cltl;, moreover, &clim;
+          <productnumber>2</productnumber> defines a significant
+          number of forms in which a <glossterm>stream
+          designator</glossterm> must be presented as a
+          <glossterm>symbol</glossterm>, and therefore may not be
+          presented as a <glossterm>stream</glossterm>.
         </para>
       </section> <!-- stream designators -->
 
