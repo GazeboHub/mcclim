@@ -158,10 +158,10 @@
        (equal (text-style-face style1) (text-style-face style2))
        (eql (text-style-size style1) (text-style-size style2))))
 
-(defconstant *default-text-style* (make-text-style :sans-serif :roman :normal))
-(defconstant *undefined-text-style* *default-text-style*)
+(defconstant* *default-text-style* (make-text-style :sans-serif :roman :normal))
+(defconstant* *undefined-text-style* *default-text-style*)
 
-(defconstant *smaller-sizes* '(:huge :very-large :large :normal
+(defconstant* *smaller-sizes* '(:huge :very-large :large :normal
 			       :small :very-small :tiny :tiny))
 
 (defconstant *font-scaling-factor* 4/3)
@@ -173,7 +173,7 @@
       (max (round (/ size *font-scaling-factor*)) *font-min-size*)
     (cadr (member size *smaller-sizes*))))
 
-(defconstant *larger-sizes* '(:tiny :very-small :small :normal
+(defconstant* *larger-sizes* '(:tiny :very-small :small :normal
 			      :large :very-large :huge :huge))
 
 (defun find-larger-size (size)

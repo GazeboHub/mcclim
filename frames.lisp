@@ -1043,13 +1043,13 @@ documentation produced by presentations.")
 (defgeneric frame-update-pointer-documentation
     (frame input-context stream event))
 
-(defconstant +button-documentation+ '((#.+pointer-left-button+ "L")
+(defconstant* +button-documentation+ '((#.+pointer-left-button+ "L")
 				      (#.+pointer-middle-button+ "M")
                                       (#.+pointer-right-button+ "R")
                                       (#.+pointer-wheel-up+ "WheelUp")
                                       (#.+pointer-wheel-down+ "WheelDown")))
 
-(defconstant +modifier-documentation+
+(defconstant* +modifier-documentation+
   '((#.+shift-key+ "sh" "Shift")
     (#.+control-key+ "c" "Control")
     (#.+meta-key+ "m" "Meta")

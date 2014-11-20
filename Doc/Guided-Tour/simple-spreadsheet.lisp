@@ -28,7 +28,7 @@
 
 (defclass cell-unparsed-text (textual-dialog-view) ())
 
-(defconstant +cell-unparsed-text-view+ (make-instance 'cell-unparsed-text))
+(defconstant* +cell-unparsed-text-view+ (make-instance 'cell-unparsed-text))
 
 (define-presentation-method present (cell (type cell) stream (view cell-unparsed-text) &key)
   (format stream "~A" (content cell)))

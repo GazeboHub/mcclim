@@ -62,7 +62,7 @@
 		(text-style-to-X-font (port medium) (medium-text-style medium))))))))
 
 ;;; Translate from CLIM styles to CLX styles.
-(defconstant +cap-shape-map+ '((:butt . :butt)
+(defconstant* +cap-shape-map+ '((:butt . :butt)
 			       (:square . :projecting)
 			       (:round . :round)
 			       (:no-end-point . :not-last)))

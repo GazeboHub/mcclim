@@ -870,7 +870,7 @@ not a mouse event)."
   (numeric-keysym-to-character (reverse-lookup-keysym keysym)))
 
 
-(defconstant *beagle-key-constants* (list
+(defconstant* *beagle-key-constants* (list
 				     #$NSUpArrowFunctionKey      :UP
 				     #$NSDownArrowFunctionKey    :DOWN
 				     #$NSLeftArrowFunctionKey    :LEFT

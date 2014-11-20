@@ -176,7 +176,7 @@
   (draw-rectangle* sheet -0.5 -0.5 0.5 0.5 :filled nil)
   (draw-circle* sheet 0 0 0.5 :start-angle (* pi 0.5) :ink +red+))
 
-(defconstant +slanting-full-angle+ (* pi 0.5))
+(defconstant* +slanting-full-angle+ (* pi 0.5))
 (defconstant +slanting-full-slant+ 3)
 
 (defun draw-slantings (sheet &key (nangles 10) (nslantings 10))

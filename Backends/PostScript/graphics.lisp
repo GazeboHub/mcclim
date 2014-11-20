@@ -264,17 +264,17 @@ setmatrix")
                  (postscript-current-state medium kind))))
 
 ;;; Line style
-(defconstant +postscript-line-joints+ '(:miter 0
+(defconstant* +postscript-line-joints+ '(:miter 0
                                         :round 1
                                         :bevel 2
                                         :none 0))
 
-(defconstant +postscript-line-caps+ '(:butt 0
+(defconstant* +postscript-line-caps+ '(:butt 0
                                       :round 1
                                       :square 2 ; extended butt caps
                                       :no-end-point 0))
 
-(defconstant +postscript-default-line-dashes+ '(30 30))
+(defconstant* +postscript-default-line-dashes+ '(30 30))
 
 (defconstant +normal-line-width+ (/ 2.0 3.0))
 

@@ -201,9 +201,9 @@
 ;;; which was itself probably literal translation from some Lisp code.
 ;;;
 
-(defconstant +ihs-rgb-c1+ (sqrt (coerce 1/6 'double-float)))
-(defconstant +ihs-rgb-c2+ (sqrt (coerce 1/2 'double-float)))
-(defconstant +ihs-rgb-c3+ (sqrt (coerce 1/3 'double-float)))
+(defconstant* +ihs-rgb-c1+ (sqrt (coerce 1/6 'double-float)))
+(defconstant* +ihs-rgb-c2+ (sqrt (coerce 1/2 'double-float)))
+(defconstant* +ihs-rgb-c3+ (sqrt (coerce 1/3 'double-float)))
 
 (defun ihs-to-rgb (intensity hue saturation)
   (let* ((hh (- (* (mod (- hue 1/2) 1) 2 pi) pi))
@@ -1011,8 +1011,8 @@
 
 ;;; The two default colors
 
-(defconstant +white+ (make-named-color "white" 1.0000 1.0000 1.0000))
-(defconstant +black+ (make-named-color "black" 0.0000 0.0000 0.0000))
+(defconstant* +white+ (make-named-color "white" 1.0000 1.0000 1.0000))
+(defconstant* +black+ (make-named-color "black" 0.0000 0.0000 0.0000))
 
 ;;; Color utilities
 

@@ -59,7 +59,7 @@
 
 ;;; Some parameters of the DEFLATE compression method
 
-(defconstant *length-encoding*
+(defconstant* *length-encoding*
     ;; Maps length token to (<number of additional bits> <length-offset>)
   '#((0    3)     (0    4)     (0    5)     (0    6)
      (0    7)     (0    8)     (0    9)     (0   10)
@@ -70,7 +70,7 @@
      (5  131)     (5  163)     (5  195)     (5  227)
      (0  258) ))
 
-(defconstant *dist-encoding*
+(defconstant* *dist-encoding*
     ;; Maps distance token to (<number of additional bits> <distance-offset>)
   '#( (0     1)      (0     2)      (0     3)      (0     4)
       (1     5)      (1     7)      (2     9)      (2    13)
@@ -81,7 +81,7 @@
      (11  4097)     (11  6145)     (12  8193)     (12 12289)
      (13 16385)     (13 24577) ))
 
-(defconstant *fixed-huffman-code-lengths*
+(defconstant* *fixed-huffman-code-lengths*
     ;; Code length for the fixed huffman code
     (let ((res (make-array 288)))
       (loop for i from   0 to 143 do (setf (aref res i) 8))
@@ -90,16 +90,16 @@
       (loop for i from 280 to 287 do (setf (aref res i) 8))
       res))
 
-(defconstant *code-length-code-lengths-order*
+(defconstant* *code-length-code-lengths-order*
     '(16 17 18 0 8 7 9 6 10 5 11 4 12 3 13 2 14 1 15)
   "Order in which code lengths for the code length alphabet are written.")
 
 ;; Layout for various kinds of huffman trees
 
 (eval-when (compile eval load)
-  (defconstant *code-len-ht-layout* '(4 2 2 2))
-  (defconstant *literal-ht-layout*  '(9 2 2 2))
-  (defconstant *dist-ht-layout*     '(9 2 2 2)) )
+  (defconstant* *code-len-ht-layout* '(4 2 2 2))
+  (defconstant* *literal-ht-layout*  '(9 2 2 2))
+  (defconstant* *dist-ht-layout*     '(9 2 2 2)) )
 
 ;;; fixnum arithmetric
 
@@ -130,7 +130,7 @@
          (declare (type fixnum ,var))
          ,@body))))
 
-(defconstant +null-octet-vector+
+(defconstant* +null-octet-vector+
     (make-array 0 :element-type '(unsigned-byte 8)))
 
 (defsubst reverse-byte (n x)

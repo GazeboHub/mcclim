@@ -605,17 +605,17 @@
 
 ;; Font and text styles
 
-(defconstant *opengl-text-families* '(:fix "adobe-courier"
+(defconstant* *opengl-text-families* '(:fix "adobe-courier"
 				      :serif "adobe-times"
 				      :sans-serif "adobe-helvetica"))
 
-(defconstant *opengl-text-faces* '(:roman "medium-r"
+(defconstant* *opengl-text-faces* '(:roman "medium-r"
 				   :bold "bold-r"
 				   :italic "medium-i"
 				   :bold-italic "bold-i"
 				   :italic-bold "bold-i"))
 
-(defconstant *opengl-text-sizes* '(:normal 14
+(defconstant* *opengl-text-sizes* '(:normal 14
 			  	   :tiny 8
 				   :very-small 10
 				   :small 12

@@ -342,7 +342,7 @@
   (with-slots (red-max green-max blue-max alpha-max) pf
     (values red-max green-max blue-max alpha-max)))
 
-(defconstant +dither-map+
+(defconstant* +dither-map+
   '#2A(( 0 48 12 60  3 51 15 63)
        (32 16 44 28 35 19 47 31)
        ( 8 56  4 52 11 59  7 55)
@@ -514,22 +514,22 @@
 ;;;;  Common Formats
 ;;;;
 
-(defconstant +RGB-8-format+
+(defconstant* +RGB-8-format+
   (make-true-color-pixel-format
    :red-byte   (byte 8 16)
    :green-byte (byte 8 8)
    :blue-byte  (byte 8 0)))
 
-(defconstant +BGR-8-format+
+(defconstant* +BGR-8-format+
   (make-true-color-pixel-format
    :red-byte   (byte 8 0)
    :green-byte (byte 8 8)
    :blue-byte  (byte 8 16)))
 
-(defconstant +gray-8-format+
+(defconstant* +gray-8-format+
   (make-gray-scale-pixel-format :gray-byte (byte 8 0)))
 
-(defconstant +bitarray-format+
+(defconstant* +bitarray-format+
   (make-gray-scale-pixel-format :gray-byte (byte 1 0)))
 
 (defmethod print-object ((x (eql +rgb-8-format+)) sink)

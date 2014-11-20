@@ -118,7 +118,7 @@
             (* scale (+ upper-height ascent))))) ;?
 
 ;;;
-(defconstant +postscript-fonts+
+(defconstant* +postscript-fonts+
   '(:fix ((:roman . "Courier")
           (:bold . "Courier-Bold")
           (:italic . "Courier-Oblique")
@@ -132,7 +132,7 @@
                  (:italic . "Helvetica-Oblique")
                  ((:bold :italic) . "Helvetica-BoldOblique"))))
 
-(defconstant +postscript-font-sizes+
+(defconstant* +postscript-font-sizes+
   '(:normal 14
     :tiny 8
     :very-small 10

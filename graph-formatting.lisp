@@ -71,7 +71,7 @@
 
 ;;;; Machinery for graph types
 
-(defconstant +built-in-graph-types+
+(defconstant* +built-in-graph-types+
   '(:tree :directed-graph :digraph :directed-acyclic-graph :dag)
   "List of graph types builtin by CLIM.")
 

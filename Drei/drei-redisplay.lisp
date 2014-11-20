@@ -97,7 +97,7 @@ text style whenever it needs to be used."
   (ink +foreground-ink+)
   (style nil))
 
-(defconstant +default-stroke-drawer-dispatcher+
+(defconstant* +default-stroke-drawer-dispatcher+
   #'(lambda (stream view stroke cursor-x cursor-y default-drawing-fn draw)
       (funcall default-drawing-fn stream view stroke cursor-x cursor-y draw))
   "A simple function of seven arguments that simply calls the

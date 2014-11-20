@@ -33,7 +33,7 @@
 ;;; These should all be able to be defined by the user, possibly
 ;;; in some start-up file (implement 'profile' ;-)
 
-(defconstant *beagle-text-families* '(:fix         "Courier"
+(defconstant* *beagle-text-families* '(:fix         "Courier"
  				      :serif       "Times New Roman"
 				      :sans-serif  "Verdana"))
 

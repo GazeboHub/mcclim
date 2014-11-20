@@ -434,7 +434,7 @@ for non-tiled designs."
 
 ;;; Translate from a CLIM cap-shape style to a Cocoa cap shape.
 
-(defconstant +beagle-cap-shape-map+ (list `(:butt . ,#$NSButtLineCapStyle)
+(defconstant* +beagle-cap-shape-map+ (list `(:butt . ,#$NSButtLineCapStyle)
 					  `(:square . ,#$NSSquareLineCapStyle)
 					  `(:round . ,#$NSRoundLineCapStyle)
 					  `(:no-end-point . ,#$NSRoundLineCapStyle)))
@@ -445,7 +445,7 @@ for non-tiled designs."
         beagle-shape
       #$NSButtLineCapStyle)))
 
-(defconstant +beagle-line-joint-map+ (list `(:miter . ,#$NSMiterLineJoinStyle)
+(defconstant* +beagle-line-joint-map+ (list `(:miter . ,#$NSMiterLineJoinStyle)
 				           `(:round . ,#$NSRoundLineJoinStyle)
 					   `(:bevel . ,#$NSBevelLineJoinStyle)
 					   `(:none . ,#$NSBevelLineJoinStyle)))

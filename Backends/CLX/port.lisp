@@ -930,11 +930,11 @@
 		 ;; :graft (find-graft :port port) 
 		 :sheet sheet))
 
-(defconstant *clx-text-families* '(:fix         "adobe-courier"
+(defconstant* *clx-text-families* '(:fix         "adobe-courier"
 				   :serif       "adobe-times"
 				   :sans-serif  "adobe-helvetica"))
 
-(defconstant *clx-text-faces* '(:roman          "medium-r"
+(defconstant* *clx-text-faces* '(:roman          "medium-r"
 				:bold           "bold-r"
 				:italic         "medium-i"
 				:bold-italic    "bold-i"

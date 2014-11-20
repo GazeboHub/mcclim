@@ -257,7 +257,7 @@
                     #+NIL
                     (draw-rectangle* stream 0 (- width/2) width width/2 :filled nil :ink +white+))))))))
 
-(defconstant +states+
+(defconstant* +states+
   '(("Alabama" AL)	
     ("Alaska" AK)
     ("Arizona" AZ)	
@@ -309,11 +309,11 @@
     ("Wisconsin" WI)
     ("Wyoming" WY)))
 
-(defconstant +presidential-candidates+
+(defconstant* +presidential-candidates+
   '(("Barak Obama" obama)
     ("Mitt Romney" romney)))
 
-(defconstant +vp-candidates+
+(defconstant* +vp-candidates+
   '(("Joseph Biden" biden)
     ("Paul Ryan" ryan)))
 

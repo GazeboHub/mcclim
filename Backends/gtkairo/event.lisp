@@ -214,7 +214,7 @@
   (logand state (1- GDK_BUTTON1_MASK)))
 
 ;; aus CLIM-CLX geklaut:
-(defconstant +clim-modifiers+ '(((:meta-left :meta-right) #.+meta-key+)
+(defconstant* +clim-modifiers+ '(((:meta-left :meta-right) #.+meta-key+)
 				((:hyper-left :hyper-right) #.+hyper-key+)
 				((:super-left :super-right) #.+super-key+)
 				((:shift-left :shift-right) #.+shift-key+)

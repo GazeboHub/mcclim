@@ -1753,7 +1753,7 @@ protocol retrieving gestures from a provided string."))
   (princ-to-string item))
 
 (eval-when (:compile-toplevel :load-toplevel :execute)
-  (defconstant +completion-options+
+  (defconstant* +completion-options+
     '((name-key 'default-completion-name-key)
       documentation-key
       (partial-completers '(#\Space)))))

@@ -100,7 +100,7 @@ advised of the possiblity of such damages.
 
 
 ;;; frequently used strings:
-(defconstant empty-string " ")
+(defconstant* empty-string " ")
 (defparameter run-string    "Please Wait")
 (defparameter input-string  "Ready")
 (defparameter error-string  "Unexpected Condition")

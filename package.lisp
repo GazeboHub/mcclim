@@ -27,6 +27,7 @@
           #:cl)
     (:export ;; selected symbols inherited from #:utils 
      #:simple-style-warning
+     #:defconstant*
      ) 
     (:shadow cl:describe cl:read cl:read-preserving-whitespace)
     #+ecl (:shadowing-import-from

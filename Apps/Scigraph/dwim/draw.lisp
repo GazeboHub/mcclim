@@ -261,7 +261,7 @@ advised of the possiblity of such damages.
 	   ;; permanently. 
 	   (clim:draw-polygon* stream points :ink alu :filled filled)))
 
-(defconstant 2pi (* 2 pi))
+(defconstant* 2pi (* 2 pi))
 
 (defun DRAW-CIRCLE (u v radius &key (filled nil) (stream *standard-output*)
 		    (alu %alu) (start-angle 0 start-p) (end-angle 2pi end-p)

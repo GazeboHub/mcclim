@@ -80,14 +80,14 @@
 (defconstant +mode-switch+ 4)
 )
 
-(defconstant +clim-modifiers+ '(((:meta-left :meta-right) #.+meta-key+)
+(defconstant* +clim-modifiers+ '(((:meta-left :meta-right) #.+meta-key+)
 				((:hyper-left :hyper-right) #.+hyper-key+)
 				((:super-left :super-right) #.+super-key+)
 				((:shift-left :shift-right) #.+shift-key+)
 				((:control-left :control-right)
 				 #.+control-key+)))
 
-(defconstant +other-modifiers+ '((:shift-lock #.+shift-lock+)
+(defconstant* +other-modifiers+ '((:shift-lock #.+shift-lock+)
 				 (:caps-lock #.+caps-lock+)
 				 (:mode-switch #.+mode-switch+)))
 
