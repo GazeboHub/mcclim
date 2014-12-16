@@ -129,15 +129,15 @@
 		    :initarg :frame-variables)))
 
 (defun compute-backtrace (start end)
-  (loop for frame    in   (swank-backend::compute-backtrace start end)
+  (loop for frame    in   (swank/backend:compute-backtrace start end)
 	for frame-no from 0
 	collect (make-instance
 		 'stack-frame
 		 :frame-string    (let ((*print-pretty* nil))
 				    (with-output-to-string (stream) 
-				      (swank-backend::print-frame frame stream)))
+				      (swank/backend:print-frame frame stream)))
 		 :frame-no        frame-no
-		 :frame-variables (swank-backend::frame-locals frame-no))))
+		 :frame-variables (swank/backend:frame-locals frame-no))))
 
 (defmethod expand-backtrace ((info debugger-info) (value integer))
   (with-slots (backtrace) info
@@ -371,7 +371,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defun debugger (condition me-or-my-encapsulation)
-  (swank-backend::call-with-debugging-environment 
+  (swank/backend:call-with-debugging-environment 
    (lambda ()
      (unwind-protect
 	  (progn 
