@@ -219,6 +219,23 @@
     <title>Applications of &mcclim;</title>
 
     <section>
+      <title>Functional Geometry</title>
+
+      <para>An example <glossterm>listener</glossterm> can be
+      displayed:</para>
+
+      <programlisting>(adsf:operate 'asdf:load-op '#:functional-geometry)
+(functional-geometry::run-functional-geometry)</programlisting>
+
+
+<para>Within the <glossterm>listener</glossterm>:</para>
+
+<programlisting>(in-package #:functional-geometry)
+(clim-plot *fishes*)</programlisting>
+
+    </section>
+
+    <section>
       <title>Scigraph</title>
 
       <remark>Scigraph now compiles successfully in SBCL</remark>
