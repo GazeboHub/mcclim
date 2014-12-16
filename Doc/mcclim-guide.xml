@@ -42,12 +42,11 @@
       version="5.0CR5-extension metacommunity-1.0"
       >
   <info>
-    <title>&project; Guide</title>
+    <title>&project; &mdash; Guide</title>
     <author>
       <personname>Sean Champ</personname>
     </author>
-
-    <date>16 Dec 2014</date>
+    <pubdate>16 Dec 2014</pubdate>
 
     <revhistory>
       <revision>
@@ -109,7 +108,7 @@
       <para>
         Effectively, this guide provides some information
         supplementary to the <citation>&mcclim; User
-        Guide</citation>, and likewise supplementary to the effective
+        Guide</citation>, and likewise supplementary to the
         &clim; <productnumber>2</productnumber> specification.
       </para>
     </sidebar>
@@ -316,9 +315,10 @@
       when closing demo window</remark>
 
       <remark>To Do: Determine whether Scigraph can be used for
-      displaying a periodic function -- observing that, essentially,
+      displaying a periodic function -- observing that essentially,
       the "X Y plot" display in Scigraph represents a presentation of
-      a Euclidean coordinate space.</remark>
+      a Euclidean coordinate space. Document: How does this extend of
+      &mcclim;?</remark>
       
     </section>
 
