@@ -224,17 +224,18 @@
         <symbol>CLIM-LISP</symbol>, such that provides a number of
         extensions onto the <symbol>COMMON-LISP</symbol>
         <glossterm>package</glossterm> <glossterm>namespace</glossterm>
-        specified of &cltl;. Broadly, these extensions serve to
+        specified of &cltl;. In a broad sense, these extensions serve to
         provide an alternate interface onto
-        <glossterm>stream</glossterm> <glossterm>object</glossterm>s,
-        furthermore providing an alternative to any
+        <glossterm>stream</glossterm> <glossterm>objects</glossterm>,
+        secondly providing an alternative to any
         <glossterm>implementation specific</glossterm> behaviors as
         with regards to the &cltl; <function>describe</function>
         <glossterm>function</glossterm>. 
       </para>
 
       <para>
-        The following functions, as defined in the <symbol>COMMON-LISP</symbol>
+        The following <glossterm>functions</glossterm>, as defined in
+        the <symbol>COMMON-LISP</symbol> 
         <glossterm>package</glossterm>
         <glossterm>namespace</glossterm>, are
         <glossterm>shadowed</glossterm> by  the
@@ -253,16 +254,21 @@
         <title>Integration with <application>Graystreams</application></title>
         
         <para>
-          In effect, the <symbol>CLIM-LISP</symbol>
-          <glossterm>package</glossterm>, as implemented of &mcclim;,
+          The <symbol>CLIM-LISP</symbol>
+          <glossterm>package</glossterm>, as implemented of &mcclim;, 
           serves to provide symbols
-          published<footnote>
+          <glossterm>published</glossterm><footnote> 
           <para>
             i.e. <glossterm>exported</glossterm> symbols
-          </para></footnote> of the<symbol>trivial-gray-streams</symbol>
+          </para></footnote> of the <symbol>trivial-gray-streams</symbol>
           <glossterm>system</glossterm> to applications using the
           <symbol>CLIM-LISP</symbol> <glossterm>package</glossterm>.
         </para>
+
+        <remark>TO DO: Make more of a semantically informed note,
+        here, about the design of the Gray Streams extension. In
+        developer documentation, also denote possible alternatives to
+        Gray Streams</remark>
         
       </sidebar>
 
