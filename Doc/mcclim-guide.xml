@@ -155,6 +155,8 @@
 
   <chapter xml:id="&project.id;.guide.compat">
     <title>&cltl; Compatibility</title>
+
+    <remark>Also make note to clim-lisp system, here</remark>
     
     <section xml:id="&project.id;.guide.compat.stream">
       <title>Streams</title>
