@@ -712,7 +712,7 @@ advised of the possiblity of such damages.
 	    height (min height h))))
    (:clim-2
     (let ((graft #-mcclim (clim:graft frame-manager)
-		 #+mcclim (clim:graft (port frame-manager))))
+		 #+mcclim (clim:graft (clim:port frame-manager))))
       (when graft
 	#-mcclim
 	(setq width (min width (silica::graft-pixel-width graft))
