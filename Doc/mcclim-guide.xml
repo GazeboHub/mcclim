@@ -215,6 +215,37 @@
 
   </chapter><!-- CLtL compatibility -->
 
+  <chapter>
+    <title>Applications of &mcclim;</title>
+
+    <section>
+      <title>Scigraph</title>
+
+      <remark>Scigraph now compiles successfully in SBCL</remark>
+
+
+      <remark>After the Scigraph system is loaded into the Lisp image,
+      the following form can be succesfully evaluated...</remark>
+
+      <programlisting>(graph::make-plain-demo)</programlisting>
+
+      <remark>...however, there are some errors now occurring during
+      interaction with the resulting graph - e.g. error with regards
+      to 'accept' method for graph name, when editing graph
+      properties; error when endeavoring to add arbitrary text go
+      graph (via right-click context menu); graph cannot be interacted
+      with after the graph properties editor window is closed; error
+      when closing demo window</remark>
+
+      <remark>To Do: Determine whether Scigraph can be used for
+      displaying a periodic function -- observing that, essentially,
+      the "X Y plot" display in Scigraph represents a presentation of
+      a Euclidean coordinate space.</remark>
+      
+    </section>
+  </chapter>
+    
+
 </book><!-- guide -->
 
 <!--  LocalWords:  McCLIM MetaCommunity ASDF CLIM Designators
