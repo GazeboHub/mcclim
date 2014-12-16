@@ -225,7 +225,7 @@ See also: `defmethod*', `function*', `fdefinition*'
 ;;    TEST SUCCESS
 ;; * "ECL" "13.5.1" armv7l
 ;;    TEST SUCCESS
-;; * "SBC" "1.2.5.76-65a44db"
+;; * "SBCL" "1.2.5.76-65a44db" amd64
 ;;    TEST SUCCESS
 
 
