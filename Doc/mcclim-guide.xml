@@ -77,13 +77,13 @@
 
     <remark>
       To do: Provide an overview about the history of the
-      development of &clim; and &mcclim;, subsequent to a summary
+      development of &clim; and &mcclim;, and a short summary
       about the development of the <glossterm>fork</glossterm>
       represented of the present <glossterm>source tree</glossterm>. 
     </remark>
 
     <sidebar>
-      <title>Applicability</title>
+      <title>Document Scope and Applicability</title>
       <para>
         This document is developed as a <glossterm>guide</glossterm>
         for developers extending the &mcclim; <glossterm>program
@@ -99,6 +99,48 @@
     </sidebar>
 
   </preface>
+
+  <chapter xml:id="&project.id;.guide.user">
+    <title>Structural Overview</title>
+
+    <section>
+      <title>Codebase Structure and Dependencies</title>
+      
+      <section>
+        <title>Systems defined in &mcclim;</title>
+
+        <remark>TODO: Provide an overview about each of the systems,
+        demos, applications, and items of experimental code defined in
+        McCLIM, for developers applying McCLIM. </remark>
+
+        <remark>For developers developing/maintaining McCLIM, also
+        make note to the McCLIM 'tools' directory</remark> 
+
+        <remark>Special focus: ESA, and
+        <literal>{Drei|Goatee}</literal></remark>
+        
+        <remark>Special focus: The 'listener' defined in McCLIM, and
+        anything further, similarly supportive of IDE develpoment or
+        other graphical application development with McCLIM</remark>
+
+        <remark>TODO: In addition to documenting McCLIM, consider
+        adding documentation or at least references to extensions of
+        CLIM -- e.g. CLIM-APPLICTION in dobelle-app (TO DO) -- and
+        applications of CLIM</remark>
+
+      </section>
+
+      <section>
+        <title>Types of &clim; <glossterm>graft</glossterm>
+        Implemented in &mcclim;</title>
+
+        <remark>TODO: Provide overview of backends and availability, per
+        each McCLIM backend (CLX, Gtkairo, graphics-forms,
+        others)</remark>
+        
+      </section>
+    </section>
+  </chapter>
 
   <chapter xml:id="&project.id;.guide.compat">
     <title>&cltl; Compatibility</title>
