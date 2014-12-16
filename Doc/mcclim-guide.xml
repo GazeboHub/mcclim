@@ -232,6 +232,21 @@
 (clim-listener:run-listener)</programlisting>
       </example>
 
+<mediaobject>
+  <imageobject>
+    <imagedata scalefit="1" align="center" 
+               fileref="screens/listener_inline-class-subclass-display.png">
+      <info>
+        <annotation>
+          <title>&mcclim; Listener</title>
+          <para>A screenshot of the &mcclim; Listener Application</para>
+        </annotation>
+      </info>
+    </imagedata>
+  </imageobject>
+</mediaobject>
+
+
     </section>
 
     <section>
@@ -248,6 +263,20 @@
 
 <programlisting>(in-package #:functional-geometry)
 (clim-plot *fishes*)</programlisting>
+
+<mediaobject>
+  <imageobject>
+    <imagedata scalefit="1" align="center"
+               fileref="screens/functional-geometry_fishes-plot.png">
+      <info>
+        <annotation>
+          <title>Functional Geometry - Fishes</title>
+          <para>A screenshot of the &mcclim; Functional Geometry Application</para>
+        </annotation>
+      </info>
+    </imagedata>
+  </imageobject>
+</mediaobject>
 
     </section>
 
@@ -280,11 +309,28 @@
     <section>
       <title>Example Applications</title>
 
+      <remark>TO DO: Add all of the 'Examples' applications into a single mcclim-demos system [ASDF]</remark>
+
       <remark>The following applications have been tested under SBCL 1.2.5.76-65a44db with Portable CLX 0.7.2 (Linux amd64)</remark>
 
       <remark>Calculator: "Works", but buttons must be controlled via mouse, not responding to keyboard e.g. "+"</remark>
       
       <remark>Clim-Fig: "Works", but 'undo' seems to demonstrate an inaccurate ordering in the output history</remark>
+
+
+      <mediaobject>
+        <imageobject>
+          <imagedata scalefit="1" align="center"
+                     fileref="screens/clim-fig.png">
+            <info>
+              <annotation>
+                <title>&mcclim; Examples - Clim-Fig</title>
+                <para>A screenshot of the &mcclim; Clim-Fig Example Application</para>
+              </annotation>
+            </info>
+          </imagedata>
+        </imageobject>
+      </mediaobject>
 
       <remark>Font-Selector: "DNW"</remark>
     </section>
