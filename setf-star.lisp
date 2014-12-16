@@ -23,67 +23,11 @@
 (defun setf-name-p (name)
   (and (listp name) (eq (car name) 'setf)))
 
-;;; Many implementations complain if a defsetf definition and a setf function
-;;; exist for the same place.
-
-;;; This file will define a feature :SETF-IMPLICIT-FDEFINITION, if it
-;;; can be determined that evaluation of
-;;;
-;;;    (DEFINE-SETF-EXPANDER foo (x) ...)
-;;;
-;;; results in a definition of a function #'(SETF FOO)
-;;;
-;;: TO DO: Produce a list of Common Lisp implementations
-;;; in which
-;;;
-;;;    (values #+:SETF-IMPLICIT-FDEFINITION T
-;;;            #-:SETF-IMPLICIT-FDEFINITION NIL)
-;;;
-;;;    => T
-;;;
-;;; In those implementations, McCLIM may implement "multiple value
-;;; setf" in using a seperate "setf star" function name for each
-;;; respective (SETF ....) generic function definition, seperate to
-;;; the the actual SETF expander. (?)
-;;;
-;;; In the => NIL instance, McCLIM may implement "multiple value
-;;; setf" without a definition of an additional "setf star" function.
-
-
-(eval-when (:compile-toplevel :load-toplevel :execute)
-  ;; FIXME: Test this across Common Lisp implementations,
-  ;; "to ensure expected functionality"
-  ;;
-  ;; Primary question: Does this form ever set :SETF-IMPLICIT-FDEFINITION ?
-  ;; i.e. Is this an effective test for whether the implementation
-  ;; cannot support a simultaneous fdefinition of (SETF FOO) and a
-  ;; SETF expansion for FOO?
-  (macrolet ((record-compat ()
-               (let ((name (gentemp "record-compat-")))
-               `(progn
-                  (define-setf-expander ,name (x)
-                    (declare (ignore x))
-                    (values nil nil nil nil nil))
-                  ;;  Test whether the definition of a SETF
-                  ;;  expansion for FOO will result in a definition of
-                  ;;  a function (SETF FOO)
-                  (when (fboundp '(setf ,name))
-                    (fmakunbound (fdefinition '(setf ,name)))
-                    (setf *features*
-                          (pushnew :setf-implicit-fdefinition *features*
-                                   :test #'eq)))
-                  ))))
-    (record-compat))
-  )
-
 
 (deftype setf-function-name ()
   '(cons (eql setf) (cons symbol nil)))
 
 (defun make-setf*-gfn-name (function-name)
-  #+:setf-implicit-fdefinition
-  (values function-name)
-  #-:setf-implicit-fdefinition
   (let* ((name-sym (cadr function-name)))
     `(setf ,(intern (format nil ".~A-~A."
                             (symbol-name name-sym)
@@ -123,7 +67,6 @@ SETF new value form.
 
 See also: `defmethod*', `function*', `fdefinition*'
 "
-  ;; FIXME: Test DEFGENERIC* for #+:SETF-IMPLICIT-FDEFINITION T
   (unless (setf-name-p fun-name)
     (error "~S is not a valid name for a SETF* generic function."
            fun-name))
@@ -187,7 +130,6 @@ form.
 
 See also: `defmethod*', `function*', `fdefinition*'
 "
-  ;; FIXME: Test DEFMETHOD* for #+:SETF-IMPLICIT-FDEFINITION T (?)
   (unless (setf-name-p name)
     (error "~S is not a valid name for a SETF* generic function."
     name))
