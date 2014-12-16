@@ -228,7 +228,8 @@
 
       <example>
         <title>Simple &mcclim; listener</title>
-        <programlisting>(clim-listener:run-listener)</programlisting>
+        <programlisting>(asdf:operate 'asdf:load-op '#:clim-listener)
+(clim-listener:run-listener)</programlisting>
       </example>
 
     </section>
