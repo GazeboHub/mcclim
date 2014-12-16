@@ -134,9 +134,10 @@ See also: `defmethod*', `function*', `fdefinition*'
            (gf (make-setf*-gfn-name fun-name))
            (%place-tmp (gensym% place))
            (%values-store (mapcar #'gensym% args)))
-      `(prog1
-           (defgeneric ,gf ,lambda-list ,@options)
-         (define-setf-expander ,setf-name (,place)
+      `(eval-when (:compile-toplevel :load-toplevel :execute)
+         (prog1
+             (defgeneric ,gf ,lambda-list ,@options)
+           (define-setf-expander ,setf-name (,place)
              (values
               (quote (,%place-tmp))
               (list ,place)
@@ -152,7 +153,7 @@ See also: `defmethod*', `function*', `fdefinition*'
               (quote (,@%values-store))
               (quote (funcall (function ,gf) ,@%values-store ,%place-tmp))
               (quote (funcall (function ,setf-name) ,%place-tmp))))
-         ))))
+           )))))
 
 
 #|
