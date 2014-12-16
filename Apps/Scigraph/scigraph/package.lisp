@@ -37,7 +37,9 @@ advised of the possiblity of such damages.
 
 (defpackage GRAPH
   #-allegro (:nicknames gr)           ; "GR" names something already.
-  (:shadow variable)                  ; shouldn't be inherited but is
+  (:shadow variable ; shouldn't be inherited but is
+           #+clim clim:point
+           )                  
   #+MCL     (:shadow copy)
   (:use dwim-lisp tool statistics))
 
