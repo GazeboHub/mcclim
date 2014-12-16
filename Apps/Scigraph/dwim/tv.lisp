@@ -288,6 +288,7 @@ advised of the possiblity of such damages.
 ;;; Mouse stuff
 ;;;
 
+#+NIL
 (defun interactive-stream-p (stream)
   #-clim (send stream :interactive)
   #+clim (clim:extended-input-stream-p stream))
