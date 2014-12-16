@@ -29,14 +29,19 @@
      #:simple-style-warning
      #:defconstant*
      ) 
-    (:shadow cl:describe cl:read cl:read-preserving-whitespace)
+    (:shadow cl:describe cl:read cl:read-preserving-whitespace
+             cl:interactive-stream-p)
     #+ecl (:shadowing-import-from
            #:clim-lisp-compat
            #:interactive-stream-p)
     ;; FIXME: CL:NIL was not available from within CLIM-LISP
     ;; at the time when the symbol was referenced in Drei kill-ring.lisp
     ;; (ECL 13.5.1)
-    (:export cl:nil)
+    (:export cl:nil
+             #:describe
+             #:read
+             #:read-preserving-whitespace
+             #:interactive-stream-p)
     )
 
   (let ((p-cl (find-package '#:cl))
