@@ -289,6 +289,32 @@
       <remark>Font-Selector: "DNW"</remark>
     </section>
   </chapter>
+
+  <chapter>
+    <title>Developer Notes</title>
+
+    <section>
+      <title>Frame Display</title>
+
+      <remark>The following 'call sequence' was observed of McCLIM, while debugging the font-selector example</remark>
+
+      <simplelist>
+        <member><function>RUN-FRAME-TOP-LEVEL</function></member>
+        <member><function>ADOPT-FRAME</function></member>
+        <member><function>GENERATE-PANES</function></member>
+      </simplelist>
+
+      <remark>presently "Buggy :</remark>
+
+      <simplelist>
+        <member><function>PORT-ALL-FONT-FAMILIES</function></member>
+        <member><remark>which calls </remark><function>RELOAD-FONT-TABLE</function></member>
+        <member><remark>which results in error</remark></member>
+      </simplelist>
+
+    </section>
+    
+  </chapter>
     
 
 </book><!-- guide -->
