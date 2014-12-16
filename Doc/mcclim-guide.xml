@@ -276,6 +276,18 @@
       a Euclidean coordinate space.</remark>
       
     </section>
+
+    <section>
+      <title>Example Applications</title>
+
+      <remark>The following applications have been tested under SBCL 1.2.5.76-65a44db with Portable CLX 0.7.2 (Linux amd64)</remark>
+
+      <remark>Calculator: "Works", but buttons must be controlled via mouse, not responding to keyboard e.g. "+"</remark>
+      
+      <remark>Clim-Fig: "Works", but 'undo' seems to demonstrate an inaccurate ordering in the output history</remark>
+
+      <remark>Font-Selector: "DNW"</remark>
+    </section>
   </chapter>
     
 
