@@ -29,7 +29,8 @@
      #:simple-style-warning
      #:defconstant*
      ) 
-    (:shadow cl:describe cl:read cl:read-preserving-whitespace
+    (:shadow cl:describe cl:describe-object
+             cl:read cl:read-preserving-whitespace
              cl:interactive-stream-p)
     #+ecl (:shadowing-import-from
            #:clim-lisp-compat
@@ -39,6 +40,7 @@
     ;; (ECL 13.5.1)
     (:export cl:nil
              #:describe
+             #:describe-object
              #:read
              #:read-preserving-whitespace
              #:interactive-stream-p)
@@ -49,6 +51,7 @@
         (p-climcl (find-package '#:clim-lisp))
         (no-export '(cl:interactive-stream-p
                      cl:describe
+                     cl:describe-object
                      cl:read
                      cl:read-preserving-whitespace
                      )))
