@@ -47,9 +47,25 @@
       <personname>Sean Champ</personname>
     </author>
 
-    <date>19 Nov 2014</date>
+    <date>16 Dec 2014</date>
 
     <revhistory>
+      <revision>
+        <date>16 Dec 2014</date>
+        <revdescription>
+          <formalpara>
+            <title>Summary</title>
+            <para>
+              Add sections for documentation about applications
+              and extensions; add initial developer notes chapter
+              <citation><xref linkend="&project.id;.guide.dev"/></citation>
+              containing a short note about <emphasis>frame
+              display</emphasis>; add screenshots for illustrating
+              features of example applications.
+            </para> 
+          </formalpara>
+        </revdescription>
+      </revision>
       <revision>
         <date>19 Nov 2014</date>
         <revdescription>
@@ -336,7 +352,7 @@
     </section>
   </chapter>
 
-  <chapter>
+  <chapter  xml:id="&project.id;.guide.dev">
     <title>Developer Notes</title>
 
     <section>
