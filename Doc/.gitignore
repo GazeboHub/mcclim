@@ -1,7 +1,7 @@
 docstrings/
-*.gif
-*.pdf
-*.png
+/*.gif
+/*.pdf
+/*.png
 tempfiles-stamp
 /*.aux
 /*.cp
