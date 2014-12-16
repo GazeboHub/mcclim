@@ -104,7 +104,7 @@
     <title>Structural Overview</title>
 
     <section>
-      <title>Codebase Structure and Dependencies</title>
+      <title>Codebase Structure</title>
       
       <section>
         <title>Systems defined in &mcclim;</title>
@@ -139,6 +139,17 @@
         others)</remark>
         
       </section>
+      
+      <section>
+        <title>System Dependencies</title>
+
+        <remark>Make note to MCi-CLtL-Utils dep
+        (cf. DEFCONSTANT*)</remark>
+
+        <remark>Note that each type of backend has its own distinct
+        deps - note those in the backends overview.</remark> 
+      </section>
+
     </section>
   </chapter>
 
