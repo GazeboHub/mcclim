@@ -206,23 +206,11 @@
           <varname>*STANDARD-INPUT*</varname>, when applied as denoting
           an <glossterm>input stream</glossterm>, or 
           <varname>*STANDARD-OUTPUT*</varname> when applied as denoting
-          an <glossterm>output stream</glossterm>. In &clim;, the
-          <glossterm>symbol</glossterm> <symbol>NIL</symbol> is not
-          applied as a <glossterm>stream designator</glossterm>. 
-          Extending of &cltl;, &clim; furthermore allows for any
-          <glossterm>symbol</glossterm> to be applied as a
-          <glossterm>stream designator</glossterm>, insofar as a
-          <glossterm>symbol</glossterm> would be applied as a name of a
-          <glossterm>variable</glossterm> <glossterm>bound</glossterm> to
-          a <glossterm>stream</glossterm> of a
-          <glossterm>type</glossterm> appropriate to the containing
-          <glossterm>form</glossterm>. As an extensional limitation
-          onto &cltl;, moreover, &clim;
-          <productnumber>2</productnumber> defines a significant
-          number of forms in which a <glossterm>stream
-          designator</glossterm> must be presented as a
-          <glossterm>symbol</glossterm>, and therefore may not be
-          presented as a <glossterm>stream</glossterm>.
+          an <glossterm>output stream</glossterm>. Effectively, this
+          overrides the interpretation of the stream designator
+          <symbol>T</symbol> as an <emphasis>shadowing
+          extension</emphasis> of &cltl;, within forms for 
+          interacting with streams in &clim;
         </para>
       </section> <!-- stream designators -->
 
