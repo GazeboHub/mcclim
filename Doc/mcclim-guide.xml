@@ -219,6 +219,21 @@
     <title>Applications of &mcclim;</title>
 
     <section>
+      <title>&mcclim; Listener</title>
+
+      <para>The &mcclim; <glossterm>listener</glossterm>
+      <glossterm>application</glossterm> provides a read-eval-print
+      loop (<acronym>REPL</acronym>) in &mcclim;<remark>, along with a menu
+      providing a convenient set of interactors.</remark></para>
+
+      <example>
+        <title>Simple &mcclim; listener</title>
+        <programlisting>(clim-listener:run-listener)</programlisting>
+      </example>
+
+    </section>
+
+    <section>
       <title>Functional Geometry</title>
 
       <para>An example <glossterm>listener</glossterm> can be
