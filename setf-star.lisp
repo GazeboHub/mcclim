@@ -41,12 +41,12 @@
 ;;;
 ;;;    => T
 ;;;
-;;; In those implementations, McCLIM shall implement "multiple value
+;;; In those implementations, McCLIM may implement "multiple value
 ;;; setf" in using a seperate "setf star" function name for each
 ;;; respective (SETF ....) generic function definition, seperate to
-;;; the the actual SETF expander.
+;;; the the actual SETF expander. (?)
 ;;;
-;;; In the => NIL instance, McCLIM shall implement "multiple value
+;;; In the => NIL instance, McCLIM may implement "multiple value
 ;;; setf" without a definition of an additional "setf star" function.
 
 
@@ -64,7 +64,7 @@
                   (define-setf-expander ,name (x)
                     (declare (ignore x))
                     (values nil nil nil nil nil))
-                  ;;  Test to see whether the definition of a SETF
+                  ;;  Test whether the definition of a SETF
                   ;;  expansion for FOO will result in a definition of
                   ;;  a function (SETF FOO)
                   (when (fboundp '(setf ,name))
@@ -81,13 +81,13 @@
   '(cons (eql setf) (cons symbol nil)))
 
 (defun make-setf*-gfn-name (function-name)
-  #-:setf-implicit-fdefinition
-  (values function-name)
   #+:setf-implicit-fdefinition
+  (values function-name)
+  #-:setf-implicit-fdefinition
   (let* ((name-sym (cadr function-name)))
     `(setf ,(intern (format nil ".~A-~A."
                             (symbol-name name-sym)
-                            (symbol-name '#:star))
+                            #.(symbol-name '#:star))
                     (symbol-package name-sym)))))
 
 (defmacro function* (fun-name)
@@ -97,15 +97,23 @@
            fun-name))
   `(function ,(make-setf*-gfn-name fun-name)))
 
+;; (function* (setf clim:stream-cursor-position))
+
 (defmacro fdefinition* (fun-name)
   ;; FIXME: Export FDEFINITION
   "Return the fdefinition for the multiple-value setf form denoted by FUN-NAME
 
 See also: `function*', `defgeneric*', `defmethod*'"
-  (unless (setf-name-p fun-name)
-    (error "~S is not a valid name for a SETF* generic function."
-           fun-name))
-  `(fdefinition (quote ,(make-setf*-gfn-name fun-name))))
+  (let ((%fun-name (gensym "%fun-name-")))
+  `(let ((,%fun-name ,fun-name))
+     (cond
+       ((setf-name-p ,%fun-name)
+        (fdefinition (make-setf*-gfn-name ,%fun-name)))
+       (t (error "~S is not a valid name for a SETF* generic function."
+                 ,%fun-name))))))
+
+;; (fdefinition* '(setf clim:stream-cursor-position))
+
 
 (defmacro defgeneric* (fun-name lambda-list &body options)
   "Defines a SETF* generic function.  FUN-NAME is a SETF function
@@ -123,7 +131,6 @@ See also: `defmethod*', `function*', `fdefinition*'
     (let* ((setf-name (cadr fun-name))
            (args (butlast lambda-list))
            (place (car (last lambda-list)))
-           #+NIL (%place (gensym% place))
            (gf (make-setf*-gfn-name fun-name))
            (%place-tmp (gensym% place))
            (%values-store (mapcar #'gensym% args)))
@@ -152,11 +159,11 @@ See also: `defmethod*', `function*', `fdefinition*'
  (macroexpand-1 '(defgeneric* (setf foo-rectangle-edges*)
                      (x1 y1 x2 y2 rectangle)))
 
-  (defgeneric* (setf foo-rectangle-edges*) (x1 y1 x2 y2 rectangle))
+  (defgeneric* (setf foo-rectangle-edges-1*) (x1 y1 x2 y2 rectangle))
   (get-setf-expansion '(setf (foo-rectangle-edges* foo) (values a b c d)))
-  (fboundp '(setf foo-rectangle-edges*)) ;; => NIL
+  (fboundp '(setf foo-rectangle-edges*)) ;; => NIL ;; first run
 
-  ;; Check: #"(SETF FOO) and setf expansion for (SETF FOO) can coexist?
+  ;; Check: #'(SETF FOO) and setf expansion for (SETF FOO) can coexist? (?)
   (defgeneric (setf foo-rectangle-edges*) (x1 y1 x2 y2 rectangle))
   (get-setf-expansion '(setf (foo-rectangle-edges* foo) (values a b c d)))
 
@@ -165,7 +172,10 @@ See also: `defmethod*', `function*', `fdefinition*'
  ;; test funcxtion*, fdefinition*
 
   (function* (setf foo-rectangle-edges*))
-  (fdefinition* (setf foo-rectangle-edges*))
+  (fdefinition* '(setf foo-rectangle-edges*))
+
+  (setf (foo-rectangle-edges* 'foo) (values 1 2 3 4))
+  ;; ...
 
 |#
 
@@ -176,7 +186,7 @@ form.
 
 See also: `defmethod*', `function*', `fdefinition*'
 "
-  ;; FIXME: Test DEFMETHOD* for #+:SETF-IMPLICIT-FDEFINITION T
+  ;; FIXME: Test DEFMETHOD* for #+:SETF-IMPLICIT-FDEFINITION T (?)
   (unless (setf-name-p name)
     (error "~S is not a valid name for a SETF* generic function."
     name))
@@ -197,7 +207,7 @@ See also: `defmethod*', `function*', `fdefinition*'
            (warn 'simple-style-warning
                  :format-control "Implicitly defining multiple-value ~s"
                  :format-arguments (quote (,name)))
-           (defgeneric* ,gf ,(extract-gf-lambda body)))
+           (defgeneric* (setf ,(cadr name)) ,(extract-gf-lambda body)))
          (defmethod ,gf ,@body)))))
 
 
@@ -238,10 +248,10 @@ See also: `defmethod*', `function*', `fdefinition*'
   ;; implicitly, as well as DEFMETHOD*, consideirng that DEFGENERIC*
   ;; would be called in the macroexapnsion of DEFMETHOD*
   ;; for an undefined "multiple-value setf" form
-  (let ((getter-name (gentemp "RT-TRI-")))
+  (let ((fname (gentemp "MVS-TEST-TRI-")))
     `(progn
-       (defmethod* (setf ,getter-name)
-           ((a number) (b number) (c number) (triangle triangle))
+       (defmethod* (setf ,fname)
+         ((a number) (b number) (c number) (triangle triangle))
          (setf (triangle-a triangle) a
                (triangle-b triangle) b
                (triangle-c triangle) c)
@@ -250,11 +260,14 @@ See also: `defmethod*', `function*', `fdefinition*'
        (let ((instance (make-instance 'triangle)))
          #+NIL
          (get-setf-expansion
-          '(setf (,getter-name instance)
+          '(setf (,fname instance)
             ;; isocolese triangle
             (values 4 4 4)))
 
-         (setf (,getter-name instance) (values 4 4 4))
+         (setf (,fname instance)
+               (values 4 4 4))
+
+         (fmakunbound '(setf ,fname))
 
          (values (triangle-a instance)
                  (triangle-b instance)
@@ -269,4 +282,32 @@ See also: `defmethod*', `function*', `fdefinition*'
 ;;    TEST SUCCESS
 ;; * "ECL" "13.5.1" armv7l
 ;;    TEST SUCCESS
+;; * "SBC" "1.2.5.76-65a44db"
+;;    TEST SUCCESS
+
+
+;; ALTERNATE TEST:
+
+(defmethod* (setf mv-test-tri-1)
+  ((a number) (b number) (c number) (triangle triangle))
+  (setf (triangle-a triangle) a
+        (triangle-b triangle) b
+        (triangle-c triangle) c)
+  (values a b c))
+
+(let ((instance (make-instance 'triangle)))
+  #+NIL
+  (get-setf-expansion
+   '(setf (,fname instance)
+     ;; isocolese triangle
+     (values 4 4 4)))
+  
+  (setf (mv-test-tri-1 instance)
+        (values 4 4 4))
+  
+  (values (triangle-a instance)
+          (triangle-b instance)
+          (triangle-c instance)))
+;; =expect=> 4, 4, 4
+
 |#
