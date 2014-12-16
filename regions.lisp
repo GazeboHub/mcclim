@@ -551,8 +551,8 @@
   (with-slots (start-angle end-angle tr) ell
     (format stream "#<~A [~A ~A] ~A>"
             (type-of ell)
-            (and start-angle (* (/ 180 pi) start-angle))
-            (and end-angle (* (/ 180 pi) end-angle))
+            (and start-angle (* #.(/ 180 pi) start-angle))
+            (and end-angle (* #.(/ 180 pi) end-angle))
             tr)))
 
 (defclass standard-ellipse (elliptical-thing ellipse) ())
@@ -602,7 +602,7 @@
                                           (+ center-x radius-2-dx) (+ center-y radius-2-dy))))
     (cond ((and (null start-angle) (null end-angle)))
           ((null start-angle) (setf start-angle 0))
-          ((null end-angle) (setf end-angle (* 2 pi))))
+          ((null end-angle) (setf end-angle #.(* 2 pi))))
     (make-instance class :tr tr :start-angle start-angle :end-angle end-angle) ))
 
 (defmethod transform-region (transformation (self elliptical-thing))

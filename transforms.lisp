@@ -635,32 +635,32 @@ real numbers, and default to 0."
   ;; atan so, wie wir es brauchen.
   ;; Bei uns ist phi=0 entlang der x-axis und Winkel sind immer zwischen 0 und 2pi.
   (let ((r (atan y x)))
-    (if (< r 0) (+ r (* 2 pi)) r)))
+    (if (< r 0) (+ r #.(* 2 pi)) r)))
 
 (defun correct-angle (a phi)
   (if (< a phi)
-      (+ a (* 2 pi))
+      (+ a #.(* 2 pi))
     a))
 
 (defun transform-angle (transformation phi)
-  (multiple-value-bind (rotations remainder) (ffloor phi (* 2 pi))
+  (multiple-value-bind (rotations remainder) (ffloor phi #.(* 2 pi))
     (when (reflection-transformation-p transformation)
-      (setq rotations  (ffloor (- phi) (* 2 pi))))
+      (setq rotations  (ffloor (- phi) #.(* 2 pi))))
     (multiple-value-bind (ix iy) (transform-distance transformation (cos remainder) (sin remainder))
       (multiple-value-bind (x0 y0) (transform-distance transformation 1 0)
         (let ((my-angle (atan* ix iy))
               (null-angle (atan* x0 y0)))
-          (+ (* rotations 2 pi) (correct-angle my-angle null-angle)))))))
+          (+ (* rotations #.(* 2 pi)) (correct-angle my-angle null-angle)))))))
 
 (defun untransform-angle (transformation phi)
-  (multiple-value-bind (rotations remainder) (ffloor phi (* 2 pi))
+  (multiple-value-bind (rotations remainder) (ffloor phi #.(* 2 pi))
     (when (reflection-transformation-p transformation)
-      (setq rotations  (ffloor (- phi) (* 2 pi))))
+      (setq rotations  (ffloor (- phi) #.(* 2 pi))))
     (multiple-value-bind (ix iy) (untransform-distance transformation (cos remainder) (sin remainder))
       (multiple-value-bind (x0 y0) (untransform-distance transformation 1 0)
         (let ((my-angle (atan* ix iy))
               (null-angle (atan* x0 y0)))
-          (+ (* rotations 2 pi) (correct-angle my-angle null-angle)))))))
+          (+ (* rotations #.(* 2 pi)) (correct-angle my-angle null-angle)))))))
 
 
 ;;;; Methods on special transformations for performance.

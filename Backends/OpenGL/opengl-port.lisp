@@ -408,7 +408,7 @@ until then, feel free to adjust the numbers, etc - BTS
 	   (gl:glPushMatrix)
 	   (gl:glLoadIdentity)
 	   (gl:glTranslated center-x center-y 0d0)
-	   (loop with dtheta of-type double-float = (/ pi 100) ; half-ellipse is cut in 100 slices
+	   (loop with dtheta of-type double-float = #.(/ pi 100) ; half-ellipse is cut in 100 slices
 		 for theta of-type double-float from start-angle to end-angle by dtheta
 		 do (multiple-value-bind (x y) (transform-position ellipse-transformation (cos theta) (sin theta))
 		      (declare (type double-float x y))

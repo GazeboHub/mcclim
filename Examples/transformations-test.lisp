@@ -51,7 +51,7 @@
                             (+ 0.5 +d+)
                             +eyes-y+))
   (draw-line* sheet 0.5 +eyes-y+ 0.5 0.5)
-  (draw-circle* sheet 0.5 0.5 +r-mouth+ :filled nil :start-angle (* 5/4 pi)))
+  (draw-circle* sheet 0.5 0.5 +r-mouth+ :filled nil :start-angle #.(* 5/4 pi)))
 
 ;;;
 (defclass vertical-picture (picture)
@@ -116,7 +116,7 @@
   ())
 
 (defmethod draw :around (sheet (picture rotated-picture))
-  (with-rotation (sheet (* pi 0.5) (make-point 0.5 0.5))
+  (with-rotation (sheet #.(* pi 0.5) (make-point 0.5 0.5))
     (call-next-method sheet picture)))
 
 (defun rotate (picture)
@@ -174,9 +174,9 @@
 
 (defun draw-my-square (sheet)
   (draw-rectangle* sheet -0.5 -0.5 0.5 0.5 :filled nil)
-  (draw-circle* sheet 0 0 0.5 :start-angle (* pi 0.5) :ink +red+))
+  (draw-circle* sheet 0 0 0.5 :start-angle #.(* pi 0.5) :ink +red+))
 
-(defconstant* +slanting-full-angle+ (* pi 0.5))
+(defconstant* +slanting-full-angle+ #.(* pi 0.5))
 (defconstant +slanting-full-slant+ 3)
 
 (defun draw-slantings (sheet &key (nangles 10) (nslantings 10))
@@ -203,8 +203,8 @@
 
 ;;; --- Test 3: Continuity ---
 (defun draw-sectors  (sheet &key (nwidths 10) (nstarts 10))
-  (let ((dsa (/ (* 2 pi) nstarts))
-        (dw (/ (* 2 pi) nwidths)))
+  (let ((dsa (/ #.(* 2 pi) nstarts))
+        (dw (/ #.(* 2 pi) nwidths)))
     (dotimes (iw (1+ nwidths))
       (dotimes (isa (1+ nstarts))
         (let* ((sa (* isa dsa))

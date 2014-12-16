@@ -29,7 +29,7 @@
                   (/ (random 255) 255)))
 
 (defun draw-rosette (stream x y radius n &rest drawing-options)
-  (loop with alpha = (/ (* 2 pi) n)
+  (loop with alpha = (/ #.(* 2 pi) n)
         and radius = (/ radius 2)
         for i below n
         do (apply #'draw-circle* stream
@@ -87,7 +87,7 @@
 
         (with-translation (stream 540 75)
           (with-scaling (stream 3)
-            (with-rotation (stream (/ pi 2))
+            (with-rotation (stream #.(/ pi 2))
               (clim:draw-rectangle* stream 10 10 200 150 :filled nil
                                     :line-thickness 2)
               (clim:draw-line* stream 200 10 10 150)

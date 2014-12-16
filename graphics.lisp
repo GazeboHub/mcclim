@@ -432,7 +432,7 @@
 		     center-point
 		     radius-1-dx radius-1-dy radius-2-dx radius-2-dy
 		     &rest args
-		     &key (filled t) (start-angle 0.0) (end-angle (* 2.0 pi))
+		     &key (filled t) (start-angle 0.0) (end-angle #.(* 2.0 pi))
 			  ink clipping-region transformation
 			  line-style line-thickness line-unit line-dashes line-cap-shape)
   (declare (ignore ink clipping-region transformation line-style line-thickness
@@ -448,7 +448,7 @@
 		      center-x center-y
 		      radius-1-dx radius-1-dy radius-2-dx radius-2-dy
 		      &rest args
-		      &key (filled t) (start-angle 0.0) (end-angle (* 2.0 pi))
+		      &key (filled t) (start-angle 0.0) (end-angle #.(* 2.0 pi))
 			   ink clipping-region transformation
 			   line-style line-thickness line-unit line-dashes line-cap-shape)
   (declare (ignore ink clipping-region transformation line-style line-thickness
@@ -462,7 +462,7 @@
 (defun draw-circle (sheet
 		    center-point radius
 		    &rest args
-		    &key (filled t) (start-angle 0.0) (end-angle (* 2.0 pi))
+		    &key (filled t) (start-angle 0.0) (end-angle #.(* 2.0 pi))
 			 ink clipping-region transformation
 			 line-style line-thickness line-unit line-dashes line-cap-shape)
   (declare (ignore ink clipping-region transformation line-style line-thickness
@@ -477,7 +477,7 @@
 (defun draw-circle* (sheet
 		     center-x center-y radius
 		     &rest args
-		     &key (filled t) (start-angle 0.0) (end-angle (* 2.0 pi))
+		     &key (filled t) (start-angle 0.0) (end-angle #.(* 2.0 pi))
 			  ink clipping-region transformation
 			  line-style line-thickness line-unit line-dashes line-cap-shape)
   (declare (ignore ink clipping-region transformation line-style line-thickness
@@ -661,13 +661,13 @@ position for the character."
                                            (floor x1) y2 (ceiling x2) y2)))
               (draw-circle* sheet x1 center-y y-radius
                             :filled filled
-                            :start-angle (* pi 0.5)
-                            :end-angle (* pi 1.5))
+                            :start-angle #.(* pi 0.5)
+                            :end-angle #.(* pi 1.5))
               (draw-circle* sheet x2 center-y y-radius
                             :filled filled
-                            :start-angle (* pi 1.5)
-                            :end-angle (* pi 2.5)))
-            (with-rotation (sheet (/ pi 2) (make-point center-x center-y))
+                            :start-angle #.(* pi 1.5)
+                            :end-angle #.(* pi 2.5)))
+            (with-rotation (sheet #.(/ pi 2) (make-point center-x center-y))
               (draw-oval* sheet center-x center-y y-radius x-radius
                           :filled filled)) ))))
 
@@ -1103,19 +1103,19 @@ position for the character."
                     (progn              ; Unfilled
                       (unless (or zl zt)
                         (draw-ellipse* medium ix1 iy1 (- radius-left) 0 0 (- radius-top)
-                                       :start-angle (/ pi 2) :end-angle pi
+                                       :start-angle #.(/ pi 2) :end-angle pi
                                        :filled nil))
                       (unless (or zr zt)
                         (draw-ellipse* medium ix2 iy1 (- radius-right) 0 0 (- radius-top)
-                                       :start-angle 0 :end-angle (/ pi 2)
+                                       :start-angle 0 :end-angle #.(/ pi 2)
                                        :filled nil))
                       (unless (or zl zb)
                         (draw-ellipse* medium ix1 iy2 (- radius-left) 0 0 (- radius-bottom)
-                                       :start-angle pi :end-angle (* 3/2 pi)
+                                       :start-angle pi :end-angle #.(* 3/2 pi)
                                        :filled nil))
                       (unless (or zr zb)
                         (draw-ellipse* medium ix2 iy2 (- radius-right) 0 0 (- radius-bottom)
-                                       :start-angle (* 3/2 pi)
+                                       :start-angle #.(* 3/2 pi)
                                        :filled nil))
                       (labels ((fx (y p x1a x2a x1b x2b) (draw-line* medium (if p x1a x1b) y (if p x2a x2b) y))
                                (fy (x p y1a y2a y1b y2b) (draw-line* medium x (if p y1a y1b) x (if p y2a y2b))))

@@ -433,8 +433,8 @@
   (multiple-value-bind (x y)
       (xy-to-viewport-coordinates pane (pointer-event-x event) (pointer-event-y event))
     (when (dragging pane) (multiple-value-call #'touch-square pane (find-poly-under-point pane x y)))
-    (setf (yaw pane)   (- (* (/ pi 4) (max -1.0 (min 1.0 x))) (/ pi 4))
-          (pitch pane) (min 0.0 (- (* (/ pi 4) (max -1.0 (min 1.0 y))) (/ pi 8))))
+    (setf (yaw pane)   (- (* #.(/ pi 4) (max -1.0 (min 1.0 x))) #.(/ pi 4))
+          (pitch pane) (min 0.0 (- (* #.(/ pi 4) (max -1.0 (min 1.0 y))) #.(/ pi 8))))
     (repaint-sheet pane (sheet-region pane))))
 
 (defmethod handle-event ((pane logic-cube-pane) (event pointer-button-press-event))

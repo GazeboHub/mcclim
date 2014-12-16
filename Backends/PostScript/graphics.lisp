@@ -44,7 +44,7 @@
   (format stream "~,3F " (coerce number 'single-float)))
 
 (defun write-angle (stream angle)
-  (write-number stream (* angle (/ 180 pi))))
+  (write-number stream (* angle #.(/ 180 pi))))
 
 (defun write-coordinates (stream x y)
   (with-transformed-position (*transformation* x y)
@@ -155,10 +155,10 @@ setmatrix")
            ;; backwards, so we need this reflection for angles.  --
            ;; CSR, 2005-08-01
            (start-angle (- (or (ellipse-end-angle circle) 0)))
-           (end-angle (- (or (ellipse-start-angle circle) (* -2 pi)))))
+           (end-angle (- (or (ellipse-start-angle circle) #.(* -2 pi)))))
       (write-string (if filled "true " "false ") stream)
       (write-angle stream (if (< end-angle start-angle)
-                              (+ end-angle (* 2 pi))
+                              (+ end-angle #.(* 2 pi))
                               end-angle))
       (write-angle stream start-angle)
       (write-transformation* stream ndx2 ndx1 ndy2 ndy1 cx cy)

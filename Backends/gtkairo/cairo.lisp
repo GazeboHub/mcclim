@@ -501,7 +501,7 @@
 	    (cairo_arc cr 0d0 0d0 1d0 (df start) (df end))
 	    (cairo_fill cr)
 	    (cairo_set_source_rgba cr 0.0d0 0.0d0 1.0d0 1.0d0)
-	    (loop for a from 0 below (* 2 pi) by .1 do
+	    (loop for a from 0 below #.(* 2 pi) by .1 do
 		  (cairo_new_path cr)
 		  (cairo_rectangle cr (df (sin a)) (df (cos a)) .05d0 .05d0)
 		  (cairo_fill cr))))))))

@@ -699,7 +699,7 @@ time an indexed pattern is drawn.")
 			  (typep min-y '(signed-byte 16)))
                    (xlib:draw-arc mirror gc min-x min-y
 				  (- max-x min-x) (- max-y min-y)
-				  0 (* 2 pi) t))))))))
+				  0 #.(* 2 pi) t))))))))
 
 
 (defmethod medium-draw-points* ((medium clx-medium) coord-seq)
@@ -725,7 +725,7 @@ time an indexed pattern is drawn.")
                               (typep min-y '(signed-byte 16)))
                      (xlib:draw-arc mirror gc min-x min-y
 				    (- max-x min-x) (- max-y min-y)
-				    0 (* 2 pi) t))))))))))
+				    0 #.(* 2 pi) t))))))))))
 
 (defmethod medium-draw-line* ((medium clx-medium) x1 y1 x2 y2)
   (let ((tr (sheet-native-transformation (medium-sheet medium))))
@@ -858,7 +858,7 @@ time an indexed pattern is drawn.")
                               center-x center-y)
     (let* ((arc-angle (- end-angle start-angle))
            (arc-angle (if (< arc-angle 0)
-                          (+ (* pi 2) arc-angle)
+                          (+ #.(* pi 2) arc-angle)
                           arc-angle)))
       (with-clx-graphics (medium)
         (let* ((radius-dx (abs (+ radius-1-dx radius-2-dx)))
@@ -871,7 +871,7 @@ time an indexed pattern is drawn.")
 		  (break))
           (xlib:draw-arc mirror gc
                          min-x min-y (- max-x min-x) (- max-y min-y)
-                         (mod start-angle (* 2 pi)) arc-angle
+                         (mod start-angle #.(* 2 pi)) arc-angle
                          filled))))))
 
 (defmethod medium-draw-circle* ((medium clx-medium)
@@ -882,7 +882,7 @@ time an indexed pattern is drawn.")
                               center-x center-y)
     (let* ((arc-angle (- end-angle start-angle))
            (arc-angle (if (< arc-angle 0)
-                          (+ (* pi 2) arc-angle)
+                          (+ #.(* pi 2) arc-angle)
                           arc-angle))
 	   (min-x (round-coordinate (- center-x radius)))
 	   (min-y (round-coordinate (- center-y radius)))

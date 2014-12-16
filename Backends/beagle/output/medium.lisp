@@ -672,8 +672,8 @@ rounding\" gives consistent results."
 				       (pixel-center center-y))))
 	    (send path :append-bezier-path-with-arc-with-center point
 		       :radius (pixel-count radius)
-		       :start-angle (cg-floatify (/ start-angle (/ pi 180)))
-		       :end-angle (cg-floatify (/ end-angle (/ pi 180)))
+		       :start-angle (cg-floatify (/ start-angle #.(/ pi 180)))
+		       :end-angle (cg-floatify (/ end-angle #.(/ pi 180)))
 		       :clockwise NIL)))
 	(if filled
 	    (send mirror :fill-path path :in-colour colour)
@@ -688,7 +688,7 @@ rounding\" gives consistent results."
 
 (defmethod medium-draw-point* ((medium beagle-medium) x y)
   (let ((width (cg-floatify (line-style-thickness (medium-line-style medium)))))
-    (medium-draw-circle* medium x y (/ width 2) 0 (* 2 pi) t)))
+    (medium-draw-circle* medium x y (/ width 2) 0 #.(* 2 pi) t)))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -703,7 +703,7 @@ rounding\" gives consistent results."
   (with-transformed-positions ((sheet-native-transformation (medium-sheet medium)) coord-seq)
     (let ((width (cg-floatify (line-style-thickness (medium-line-style medium)))))
       (do-sequence ((x y) coord-seq)
-        (medium-draw-circle* medium x y (/ width 2) 0 (* 2 pi) t)))))
+        (medium-draw-circle* medium x y (/ width 2) 0 #.(* 2 pi) t)))))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

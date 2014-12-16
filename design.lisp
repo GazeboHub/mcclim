@@ -206,7 +206,7 @@
 (defconstant* +ihs-rgb-c3+ (sqrt (coerce 1/3 'double-float)))
 
 (defun ihs-to-rgb (intensity hue saturation)
-  (let* ((hh (- (* (mod (- hue 1/2) 1) 2 pi) pi))
+  (let* ((hh (- (* (mod (- hue 1/2) 1) #.(* 2 pi)) pi))
          (c3 (cos saturation))
          (s3 (sin saturation))
          (cos-hh (cos hh))
@@ -228,7 +228,7 @@
     (if (zerop q)
         ;; A totally unsaturated color
         (values intensity 0 0)
-      (let* ((hue (mod (/ (atan y x) (* 2 pi)) 1))
+      (let* ((hue (mod (/ (atan y x) #.(* 2 pi)) 1))
              (f1 (/ z intensity))
              (f2 (sqrt (- 1 (* f1 f1))))
              (saturation (atan f2 f1)))

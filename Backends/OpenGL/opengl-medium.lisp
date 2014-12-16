@@ -219,7 +219,7 @@
 				     :start-angle start-angle
 				     :end-angle end-angle))
 		 (tr (slot-value ell 'tr))
-		 (2pi (* 2 pi))
+		 (2pi #.(* 2 pi))
 		 (d-theta (- end-angle start-angle)))
 	    (if filled
 		(progn 

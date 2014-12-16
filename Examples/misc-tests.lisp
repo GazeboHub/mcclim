@@ -119,8 +119,8 @@
             with n = 12
             for i from 0 below n do
             (setf (stream-cursor-position stream)
-                  (values (* outer-radius (sin (* i 2 pi (/ n))))
-                          (* outer-radius (cos (* i 2 pi (/ n))))))
+                  (values (* outer-radius (sin (* i #.(* 2 pi) (/ n))))
+                          (* outer-radius (cos (* i #.(* 2 pi) (/ n))))))
             (surrounding-output-with-border (stream :shape :ellipse
                                                     :circle t
                                                     :min-radius inner-radius
@@ -200,7 +200,7 @@
         (to-head t))
   (with-room-for-graphics (stream :first-quadrant nil)
    (with-scaling (stream scale scale)
-     (loop for theta from 0.0 below (* 2 pi) by (/ (* 2 pi) 17) do
+     (loop for theta from 0.0 below #.(* 2 pi) by (/ #.(* 2 pi) 17) do
           (progn (let* ((x2 (* 250 (sin theta)))
                         (y2 (* 250 (cos theta)))
                         (x1 (* 0.2 x2))
