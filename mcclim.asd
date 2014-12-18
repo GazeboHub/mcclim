@@ -77,7 +77,8 @@
     ())
   (defmethod asdf:perform ((op asdf:load-op) (system requireable-system))
     (require (intern (slot-value system 'asdf::name) :keyword)))
-  (defmethod asdf::traverse ((op asdf:load-op) (system requireable-system))
+  (defmethod asdf:traverse ((op asdf:load-op) (system requireable-system)
+                             &key &allow-other-keys)
     (list (cons op system)))  
   (defsystem :clx
     :class requireable-system))
