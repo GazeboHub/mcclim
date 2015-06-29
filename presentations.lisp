@@ -412,6 +412,56 @@ filled in."
 				   `(((:description ,(gensym))))))))))
 
 
+;;; Condition types
+
+(define-condition presentation-type-condition ()
+  ((name
+    :initarg :name
+    :reader presentation-type-condition-name)))
+
+(define-condition presentation-type-undefined (presentation-type-condition)
+  ()
+  (:report 
+   (lambda (c s)
+     (format s "~S is not the name of a presentation type"
+             (presentation-type-condition-name c)))))
+
+(define-condition presentation-type-undefined-error
+    (error presentation-type-undefined)
+  ())
+
+(define-condition presentation-type-undefined-warning
+    (style-warning presentation-type-undefined)
+  ())
+
+(define-condition presentation-type-name-mismatch
+    (error presentation-type-condition)
+  ((binding
+    :initarg :binding
+    :reader presentation-type-name-mismatch-binding))
+  (:report
+   (lambda (c s)
+     (format s "Presentation type specifier ~S does not match the name ~S"
+             (presentation-type-name-mismatch-binding c)
+             (presentation-type-condition-name c)))))
+             
+(define-condition presentation-type-prototype-undefined
+    (error presentation-type-condition)
+  ()
+  (:report 
+   (lambda (c s)
+     (format s "No prototype defiined for name ~S"
+             (presentation-type-condition-name c)))))
+
+
+(define-condition presentation-function-undefined
+    (error presentation-type-condition)
+  ()
+  (:report 
+   (lambda (c s)
+     (format s "~S is not a presentation generic function"
+             (presentation-type-condition-name c)))))
+
 ;;; External function
 (declaim (inline presentation-type-name))
 
@@ -501,7 +551,7 @@ filled in."
   type)
 
 (defmethod get-ptype-metaclass (type)
-  (error "~A is not the name of a presentation type" type))
+  (error 'presentation-type-undefined-error :name type))
 
 ;;; external functions
 (defun find-presentation-type-class (name &optional (errorp t) environment)
@@ -510,7 +560,7 @@ filled in."
     (cond (metaclass
 	   metaclass)
 	  (errorp
-	   (error "~S is not the name of a presentation type" name))
+           (error 'presentation-type-undefined-error :name name))
 	  (t nil))))
 
 (defun class-presentation-type-name (class &optional environment)
@@ -527,13 +577,14 @@ filled in."
 (defun prototype-or-error (name)
   (let ((ptype-meta (get-ptype-metaclass name)))
     (unless ptype-meta
-      (error "~S is an unknown presentation type" name))
+      (error 'presentation-type-undefined-error :name name))
     (when (eq ptype-meta *builtin-t-class*)
       (return-from prototype-or-error *class-t-prototype*))
     (unless (clim-mop:class-finalized-p ptype-meta)
       (clim-mop:finalize-inheritance ptype-meta))
     (or (clim-mop:class-prototype ptype-meta)
-      (error "Couldn't find a prototype for ~S" name))))
+        (error 'presentation-type-prototype-undefined
+               :name name))))
 
 (defun safe-cpl (class)
   (unless (clim-mop:class-finalized-p class)
@@ -763,20 +814,22 @@ suitable for SUPER-NAME"))
   (declare (ignore env))
   (let ((ptype (gethash type-name *presentation-type-table*)))
     (unless ptype
-      (error "~S is not the name of a presentation type" type-name))
+      (error 'presentation-type-undefined :name type-name))
     (parameters ptype)))
 
 (defun presentation-type-options (type-name &optional env)
   (declare (ignore env))
   (let ((ptype (gethash type-name *presentation-type-table*)))
     (unless ptype
-      (error "~S is not the name of a presentation type" type-name))
+      (error 'presentation-type-undefined :name type-name))
     (options ptype)))
+
 
 (defmacro with-presentation-type-parameters ((type-name type) &body body)
   (let ((ptype (get-ptype type-name)))
     (unless (or ptype (compile-time-clos-p type-name))
-      (warn "~S is not a presentation type name." type-name))
+      (warn 'presentation-type-undefined-warning
+            :name type-name))
     (if (typep ptype 'presentation-type)
 	(let* ((params-ll (parameters-lambda-list ptype))
 	       (params (gensym "PARAMS"))
@@ -784,9 +837,9 @@ suitable for SUPER-NAME"))
 	       (ignorable-vars (get-all-params params-ll)))
 	  `(let ((,type-var ,type))
 	    (unless (eq ',type-name (presentation-type-name ,type-var))
-	      (error "Presentation type specifier ~S does not match the name ~S"
-		     ,type-var
-		     ',type-name))
+	      (error 'presentation-type-name-mismatch
+                     :binding ,type-var
+		     :name ',type-name))
 	    (let ((,params (decode-parameters ,type-var)))
 	      (declare (ignorable ,params))
 	      (destructuring-bind ,params-ll ,params
@@ -799,7 +852,8 @@ suitable for SUPER-NAME"))
 (defmacro with-presentation-type-options ((type-name type) &body body)
   (let ((ptype (get-ptype type-name)))
     (unless (or ptype (compile-time-clos-p type-name))
-      (warn "~S is not a presentation type name." type-name))
+      (warn 'presentation-type-undefined-warning
+            :name type-name))
     (if (typep ptype 'presentation-type)
 	(let* ((options-ll (options-lambda-list ptype))
 	       (options (gensym "OPTIONS"))
@@ -807,9 +861,9 @@ suitable for SUPER-NAME"))
 	       (ignorable-vars (get-all-params options-ll)))
 	  `(let ((,type-var ,type))
 	    (unless (eq ',type-name (presentation-type-name ,type-var))
-	      (error "Presentation type specifier ~S does not match the name ~S"
-		     ,type-var
-		     ',type-name))
+              (error 'presentation-type-name-mismatch
+                     :binding ,type-var
+		     :name ',type-name))
 	    (let ((,options (decode-options ,type-var)))
 	      (declare (ignorable ,options))
 	      (destructuring-bind ,options-ll ,options
@@ -1109,7 +1163,8 @@ function lambda list"))
       `(define-subtypep-method ,@args)))
   (let ((gf (gethash name *presentation-gf-table*)))
     (unless gf
-      (error "~S is not a presentation generic function" name))
+      (error 'presentation-function-undefined
+             :name name))
     (with-accessors ((parameters-arg parameters-arg)
 		     (options-arg options-arg))
       gf
@@ -1162,7 +1217,8 @@ function lambda list"))
 (defmacro define-default-presentation-method (name &rest args)
   (let ((gf (gethash name *presentation-gf-table*)))
     (unless gf
-      (error "~S is not a presentation generic function" name))
+      (error 'presentation-function-undefined
+             :name name))
     (multiple-value-bind (qualifiers lambda-list decls body)
 	(parse-method-body args)
       `(defmethod ,(generic-function-name gf) ,@qualifiers (,(type-key-arg gf)
@@ -1186,7 +1242,8 @@ function lambda list"))
 (defmacro funcall-presentation-generic-function (name &rest args)
   (let ((gf (gethash name *presentation-gf-table*)))
     (unless gf
-      (error "~S is not a presentation generic function" name))
+      (error 'presentation-function-undefined
+             :name name))
     (let* ((rebound-args (loop for arg in args
                             unless (symbolp arg)
                             collect (list (gensym "ARG") arg)))
@@ -1210,7 +1267,8 @@ function lambda list"))
 (defmacro apply-presentation-generic-function (name &rest args)
   (let ((gf (gethash name *presentation-gf-table*)))
     (unless gf
-      (error "~S is not a presentation generic function" name))
+      (error 'presentation-function-undefined
+             :name name))
     `(apply #'%funcall-presentation-generic-function ',name
 	    #',(generic-function-name gf)
 	    ,(type-arg-position gf)
